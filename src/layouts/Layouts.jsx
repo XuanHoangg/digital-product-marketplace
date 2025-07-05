@@ -102,24 +102,32 @@ const Layouts = () => {
               <h3 className="footer__links-title">Liên kết</h3>
               <ul className="footer__links-list">
                 <li className="footer__links-item">
-                  <a href="#" className="footer__links-link">
+                  <NavLink to="/" className="footer__links-link">
+                    Trang chủ
+                  </NavLink>
+                  {/* <a href="#" className="footer__links-link">
                     About Us
-                  </a>
+                  </a> */}
                 </li>
                 <li className="footer__links-item">
-                  <a href="#" className="footer__links-link">
-                    Contact
-                  </a>
+                  <NavLink to="/product" className="footer__links-link">
+                    Sản phẩm
+                  </NavLink>
                 </li>
                 <li className="footer__links-item">
-                  <a href="#" className="footer__links-link">
-                    Terms & Conditions
-                  </a>
+                  <NavLink to="/service" className="footer__links-link">
+                    Dịch vụ
+                  </NavLink>
                 </li>
                 <li className="footer__links-item">
-                  <a href="#" className="footer__links-link">
-                    Privacy Policy
-                  </a>
+                  <NavLink to="/contact" className="footer__links-link">
+                    Liên hệ
+                  </NavLink>
+                </li>
+                <li className="footer__links-item">
+                  <NavLink to="/question" className="footer__links-link">
+                    Câu hỏi
+                  </NavLink>
                 </li>
               </ul>
             </div>

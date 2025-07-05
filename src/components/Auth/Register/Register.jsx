@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import "./Register.scss";
 import { NavLink, useNavigate } from "react-router-dom";
-
+import { toast } from "react-toastify";
+import validation from "../../../utils/validation";
+import { postRegister } from "./../../../service/auth/authAPI";
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -10,16 +12,39 @@ const Register = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [userType, setUserType] = useState("buyer");
   const [agreeTerms, setAgreeTerms] = useState(false);
-
-  const handleSubmit = (e) => {
+  const { validateEmail, validateUsername, validatePassword } = validation;
+  const handleSubmit = async (e) => {
+    const isBuyer = true;
     e.preventDefault();
+    if (userType === "seller") {
+      isBuyer = false;
+    }
     console.log({
       email,
       password,
       confirmPassword,
-      userType,
-      agreeTerms,
+      isBuyer,
     });
+    if (!validateEmail(email)) {
+      toast.error("Email không hợp lệ!");
+      return;
+    }
+    if (!validatePassword(password)) {
+      toast.error("Mật khẩu phải hơn 5 ký tự!");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      toast.error("Mật khẩu không khớp!");
+      return;
+    }
+    let data = await postRegister(email, password, confirmPassword, isBuyer);
+    if (data.messageResult === "Thành công.") {
+      toast.success(data.data);
+    } else {
+      toast.error(data.messageResult);
+    }
+    console.log("data", data);
   };
 
   return (
