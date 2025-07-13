@@ -6,15 +6,16 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   function (config) {
-    console.log("check store", store.getState());
-    // const access_token = store?.getState()?.user?.account?.access_token;
-    // config.headers["Authorization"] = "Bearer " + access_token;
+    const state = store.getState();
+    const accessToken = state?.auth?.account?.accessToken;
 
-    // Do something before request is sent
+    if (accessToken) {
+      config.headers["Authorization"] = "Bearer " + accessToken;
+    }
+
     return config;
   },
   function (error) {
-    // Do something with request error
     return Promise.reject(error);
   }
 );
@@ -24,6 +25,11 @@ instance.interceptors.response.use(
   function (response) {
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
+    // if (error.response?.status === 401) {
+    //   // Xử lý logout, hoặc redirect user về login
+    //   // store.dispatch(logoutAction());
+    //   window.location.href = "/login";
+    // }
     return response && response.data ? response.data : response;
   },
   function (error) {

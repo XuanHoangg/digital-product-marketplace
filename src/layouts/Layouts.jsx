@@ -1,13 +1,43 @@
-import React from "react";
-import { Outlet, NavLink } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import NavDropdown from "react-bootstrap/NavDropdown";
+import Nav from "react-bootstrap/Nav";
+import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { FaFacebook } from "react-icons/fa6";
 import { FaYoutube } from "react-icons/fa";
 import { AiFillInstagram } from "react-icons/ai";
 import { FaReddit } from "react-icons/fa";
-
+import { getUserProfile } from "../service/user/userAPI";
+import { getShortName } from "../utils/helper";
+import { logout } from "../redux/slice/authSlice";
 import "./layouts.scss";
-import { useState } from "react";
+
 const Layouts = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const userId = useSelector((state) => state.auth.account.userId);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [fullname, setFullname] = useState("");
+  useEffect(() => {
+    getUserData();
+  }, []);
+  const getUserData = async () => {
+    let data = await getUserProfile(userId);
+    // console.log("getUserData", data);
+
+    if (data?.status === 0) {
+      const initials = getShortName(data.data.fullName);
+      setFullname(initials);
+    }
+  };
+  const handleProfile = () => {
+    navigate("/user");
+  };
+  const handleLogout = () => {
+    dispatch(logout({ data: { token: { refreshToken: "" } } }));
+    navigate("/login");
+  };
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
@@ -61,7 +91,52 @@ const Layouts = () => {
               isMobileMenuOpen ? "header__actions--open" : ""
             }`}
           >
-            <NavLink to="/login" className="header__btn header__btn--login">
+            <Nav>
+              {!isAuthenticated ? (
+                <>
+                  <NavLink
+                    to="/login"
+                    className="header__btn header__btn--login"
+                  >
+                    Đăng nhập
+                  </NavLink>
+
+                  <NavLink
+                    to="/register"
+                    className="header__btn header__btn--register"
+                  >
+                    Đăng ký
+                  </NavLink>
+                </>
+              ) : (
+                <div className="header__avatar-container">
+                  <div
+                    className="header__avatar"
+                    onClick={() => setShowDropdown(!showDropdown)}
+                  >
+                    {fullname}
+                  </div>
+                  {showDropdown && (
+                    <div className="header__dropdown">
+                      <div
+                        className="header__dropdown-item"
+                        onClick={handleProfile}
+                      >
+                        Hồ sơ cá nhân
+                      </div>
+                      <div
+                        className="header__dropdown-item"
+                        onClick={() => handleLogout()}
+                      >
+                        Đăng xuất
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </Nav>
+            {/* --- */}
+            {/* <NavLink to="/login" className="header__btn header__btn--login">
               Đăng nhập
             </NavLink>
 
@@ -70,7 +145,7 @@ const Layouts = () => {
               className="header__btn header__btn--register"
             >
               Đăng ký
-            </NavLink>
+            </NavLink> */}
           </div>
 
           <button className="header__mobile-toggle" onClick={toggleMobileMenu}>
@@ -105,9 +180,6 @@ const Layouts = () => {
                   <NavLink to="/" className="footer__links-link">
                     Trang chủ
                   </NavLink>
-                  {/* <a href="#" className="footer__links-link">
-                    About Us
-                  </a> */}
                 </li>
                 <li className="footer__links-item">
                   <NavLink to="/product" className="footer__links-link">

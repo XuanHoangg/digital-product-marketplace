@@ -13,6 +13,7 @@ import Service from "./components/Content/Service/Service.jsx";
 import Contact from "./components/Content/Contact/Contact.jsx";
 import NotFound from "./components/Content/NotFound/NotFound.jsx";
 import FAQPage from "./components/Content/FAQ/FAQPage.jsx";
+import UserInfor from "./components/User/UserInFor/UserInfor.jsx";
 import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
 import { store, persistor } from "./redux/store.js";
@@ -29,7 +30,10 @@ createRoot(document.getElementById("root")).render(
               <Route path="/service" element={<Service />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/question" element={<FAQPage />} />
-              <Route path="/user" element={<Layout />} />
+              <Route path="/user" element={<Layout />}>
+                <Route index element={<UserInfor />} />
+                {/* Add other user-related routes here */}
+              </Route>
             </Route>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />

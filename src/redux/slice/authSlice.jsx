@@ -1,51 +1,48 @@
-// import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
-// const initialState = {
-//   account: {
-//     access_token: "",
-//     refresh_token: "",
-//     username: "",
-//     email: "",
-//     image: "",
-//     role: "",
-//   },
-//   isAuthenticated: false,
-// };
+const initialState = {
+  account: {
+    accessToken: "",
+    refreshToken: "",
+    userId: "",
+    role: "",
+  },
+  isAuthenticated: false,
+};
 
-// const handleLoginSuccess = (state, action) => {
-//   const data = action.payload?.DT || {};
-//   state.account = {
-//     access_token: data.access_token,
-//     refresh_token: data.refresh_token,
-//     username: data.username,
-//     email: data.email,
-//     image: data.image,
-//     role: data.role,
-//   };
-//   state.isAuthenticated = true;
-// };
+const handleLoginSuccess = (state, action) => {
+  let data = action.payload.data;
+  // console.log("Login Success Data:", data);
 
-// const handleLogout = (state, action) => {
-//   const data = action.payload?.DT || {};
-//   state.account = {
-//     access_token: "",
-//     refresh_token: data.refresh_token,
-//     username: "",
-//     email: "",
-//     image: "",
-//     role: "",
-//   };
-//   state.isAuthenticated = false;
-// };
+  state.account = {
+    accessToken: data.token.accessToken,
+    refreshToken: data.token.refreshToken,
+    userId: data.userId,
+    role: data.role,
+  };
+  state.isAuthenticated = true;
+};
 
-// const userSlice = createSlice({
-//   name: "user",
-//   initialState,
-//   reducers: {
-//     loginSuccess: handleLoginSuccess,
-//     logout: handleLogout,
-//   },
-// });
+const handleLogout = (state, action) => {
+  let data = action.payload.data;
+  console.log("Logout Data:", data);
+  state.account = {
+    accessToken: "",
+    refreshToken: data.token.refreshToken,
+    userId: "",
+    role: "",
+  };
+  state.isAuthenticated = false;
+};
 
-// export const { loginSuccess, logout } = userSlice.actions;
-// export default userSlice.reducer;
+const authSlice = createSlice({
+  name: "auth",
+  initialState,
+  reducers: {
+    loginSuccess: handleLoginSuccess,
+    logout: handleLogout,
+  },
+});
+
+export const { loginSuccess, logout } = authSlice.actions;
+export default authSlice.reducer;

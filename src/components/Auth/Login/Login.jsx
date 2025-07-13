@@ -1,16 +1,36 @@
-import React from "react";
-import { useState } from "react";
-import "./Login.scss";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
+
+import "./Login.scss";
+import { postLogin } from "./../../../service/auth/authAPI";
+import { loginSuccess } from "../../../redux/slice/authSlice";
+import { toast } from "react-toastify";
+
 const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [remember, setRemember] = useState(false);
+  // const [remember, setRemember] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({ email, password, remember });
+    // console.log({ email, password });
+    let data = await postLogin(email, password);
+    // console.log("dataLogin", data);
+
+    if (data.status === 0) {
+      toast.success("Đăng nhâp thành công!");
+      dispatch(loginSuccess(data));
+      navigate("/");
+    }
+    if (data.status === 3) {
+      toast.error(data.messageResult);
+      return;
+    }
   };
 
   return (
@@ -60,14 +80,14 @@ const Login = () => {
           </div>
 
           <div className="login-options">
-            <label className="login-remember">
+            {/* <label className="login-remember">
               <input
                 type="checkbox"
                 checked={remember}
                 onChange={(e) => setRemember(e.target.checked)}
               />
               <span>Ghi nhớ</span>
-            </label>
+            </label> */}
             <a href="#" className="login-forgot">
               Quên mật khẩu?
             </a>

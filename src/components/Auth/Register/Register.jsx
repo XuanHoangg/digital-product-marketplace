@@ -1,10 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Register.scss";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+
 import validation from "../../../utils/validation";
-import { postRegister } from "./../../../service/auth/authAPI";
+import {
+  postRegister,
+  getOTP,
+  verifyOTP,
+} from "./../../../service/auth/authAPI";
+import OTPPopup from "../OTPPopup/OTPPopup";
+
 const Register = () => {
+  // navigate
+  const navigate = useNavigate();
+  // state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -12,19 +22,21 @@ const Register = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [userType, setUserType] = useState("buyer");
   const [agreeTerms, setAgreeTerms] = useState(false);
+
+  // popup OTP
+  const [isOTPPopupOpen, setIsOTPPopupOpen] = useState(false);
+
+  // validation
   const { validateEmail, validateUsername, validatePassword } = validation;
+
   const handleSubmit = async (e) => {
-    const isBuyer = true;
+    let isBuyer = true;
+    let isEnabled2FA = true;
     e.preventDefault();
     if (userType === "seller") {
       isBuyer = false;
     }
-    console.log({
-      email,
-      password,
-      confirmPassword,
-      isBuyer,
-    });
+
     if (!validateEmail(email)) {
       toast.error("Email không hợp lệ!");
       return;
@@ -38,13 +50,52 @@ const Register = () => {
       toast.error("Mật khẩu không khớp!");
       return;
     }
-    let data = await postRegister(email, password, confirmPassword, isBuyer);
-    if (data.messageResult === "Thành công.") {
-      toast.success(data.data);
-    } else {
+    let data = await postRegister(
+      email,
+      password,
+      confirmPassword,
+      isBuyer,
+      isEnabled2FA
+    );
+    if (data.status === 3) {
       toast.error(data.messageResult);
+      return;
     }
-    console.log("data", data);
+    setIsOTPPopupOpen(true);
+  };
+
+  // Hàm xử lý xác nhận OTP
+  const handleVerifyOTP = async (email, otpCode) => {
+    try {
+      // console.log("Verifying OTP:", email, otpCode);
+      let data = await verifyOTP(email, otpCode);
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      if (data.status === 0) {
+        toast.success("Xác nhận OTP thành công!");
+        setIsOTPPopupOpen(false);
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000);
+        return;
+      }
+      if (data.status === 3) {
+        toast.error(data.messageResult);
+        return;
+      }
+    } catch (error) {
+      toast.error("Mã OTP không đúng!");
+    }
+  };
+
+  // Hàm xử lý gửi lại OTP
+  const handleResendOTP = async () => {
+    try {
+      await getOTP(email);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      toast.success("Đã gửi lại mã OTP!");
+    } catch (error) {
+      toast.error("Không thể gửi lại mã OTP!");
+    }
   };
 
   return (
@@ -175,7 +226,15 @@ const Register = () => {
           </p>
         </form>
       </div>
+      <OTPPopup
+        isOpen={isOTPPopupOpen}
+        onClose={() => setIsOTPPopupOpen(false)}
+        email={email}
+        onVerify={handleVerifyOTP}
+        onResend={handleResendOTP}
+      />
     </div>
   );
 };
+
 export default Register;
