@@ -1,4 +1,9 @@
 import axios from "../../utils/axiosCustom";
+const getOTP = async (email) => {
+  return await axios.post("api/Auth/enable-2fa", {
+    email,
+  });
+};
 const postRegister = async (
   email,
   password,
@@ -21,11 +26,6 @@ const postLogin = async (email, password) => {
   });
 };
 
-const getOTP = async (email) => {
-  return await axios.post("api/Auth/enable-2fa", {
-    email,
-  });
-};
 const verifyOTP = async (email, secretCode) => {
   return await axios.post("api/Auth/confirm-2fa", {
     email,

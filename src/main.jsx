@@ -18,6 +18,8 @@ import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
 import { store, persistor } from "./redux/store.js";
 import Layout from "./components/User/UserLayout/Layout.jsx";
+import ProtectedRoute from "./routes/ProtectedRoute.jsx";
+import UserSecurity from "./components/User/UserSecurity/UserSecurity.jsx";
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
@@ -30,8 +32,16 @@ createRoot(document.getElementById("root")).render(
               <Route path="/service" element={<Service />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/question" element={<FAQPage />} />
-              <Route path="/user" element={<Layout />}>
+              <Route
+                path="/user"
+                element={
+                  <ProtectedRoute>
+                    <Layout />
+                  </ProtectedRoute>
+                }
+              >
                 <Route index element={<UserInfor />} />
+                <Route path="security" element={<UserSecurity />} />
                 {/* Add other user-related routes here */}
               </Route>
             </Route>

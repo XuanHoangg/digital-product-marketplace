@@ -1,12 +1,21 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+
 import { getUserProfile } from "../../../service/user/userAPI";
 import { getShortName } from "../../../utils/helper";
+import { FaRegUser } from "react-icons/fa";
+import { MdSecurity } from "react-icons/md";
+import { IoWalletSharp } from "react-icons/io5";
+import { IoBagCheckSharp } from "react-icons/io5";
+import { logout } from "../../../redux/slice/authSlice";
 
 import "./Layout.scss";
 
 const Layout = () => {
+  const dispatch = useDispatch();
+  // const navigate = useNavigate();
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const userId = useSelector((state) => state.auth.account.userId);
   const [abbreviatedName, setAbbreviatedName] = useState("");
@@ -46,6 +55,10 @@ const Layout = () => {
 
   const closeSidebar = () => {
     setIsSidebarOpen(false);
+  };
+  const handleLogout = () => {
+    dispatch(logout({ data: { token: { refreshToken: "" } } }));
+    navigate("/login");
   };
   return (
     <div className="layout">
@@ -95,78 +108,41 @@ const Layout = () => {
           <nav className="sidebar__nav">
             <ul className="nav__list">
               <li className="nav__item nav__item--active">
-                <a href="#" className="nav__link">
-                  <svg
-                    className="nav__icon"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                  >
-                    <path
-                      d="M10 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12zM2 10a8 8 0 1 1 16 0 8 8 0 0 1-16 0z"
-                      fill="currentColor"
-                    />
-                    <path
-                      d="M10 6a1 1 0 0 1 1 1v6a1 1 0 1 1-2 0V7a1 1 0 0 1 1-1z"
-                      fill="currentColor"
-                    />
-                  </svg>
+                {/* <a href="#" className="nav__link">
+                  <FaRegUser />
                   Thông Tin Cá Nhân
-                </a>
+                </a> */}
+                <NavLink to="/user" className="nav__link">
+                  <FaRegUser />
+                  Thông Tin Cá Nhân
+                </NavLink>
               </li>
               <li className="nav__item">
-                <a href="#" className="nav__link">
-                  <svg
-                    className="nav__icon"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                  >
-                    <path
-                      d="M3 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4zM3 10a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-6z"
-                      fill="currentColor"
-                    />
-                  </svg>
+                <NavLink to="/user/security" className="nav__link">
+                  <MdSecurity />
                   Bảo Mật
-                </a>
+                </NavLink>
+                {/* <a href="#" className="nav__link">
+                  <MdSecurity />
+                  Bảo Mật
+                </a> */}
               </li>
               <li className="nav__item">
                 <a href="#" className="nav__link">
-                  <svg
-                    className="nav__icon"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                  >
-                    <path
-                      d="M4 4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H4zm0 2h12v8H4V6z"
-                      fill="currentColor"
-                    />
-                  </svg>
+                  <IoWalletSharp />
                   Ví Của Tôi
                 </a>
               </li>
               <li className="nav__item">
                 <a href="#" className="nav__link">
-                  <svg
-                    className="nav__icon"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                  >
-                    <path
-                      d="M3 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4zm2 1v10h10V5H5z"
-                      fill="currentColor"
-                    />
-                  </svg>
+                  <IoBagCheckSharp />
                   Đơn Hàng
                 </a>
               </li>
-              <li className="nav__item nav__item--logout">
+              <li
+                className="nav__item nav__item--logout"
+                onClick={() => handleLogout()}
+              >
                 <a href="#" className="nav__link">
                   <svg
                     className="nav__icon"

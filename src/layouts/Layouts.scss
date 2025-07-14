@@ -150,7 +150,10 @@ body {
   &__actions {
     display: flex;
     gap: 10px;
-
+    .nav {
+      display: flex;
+      gap: 10px;
+    }
     @include respond-to(tablet) {
       position: fixed;
       top: calc(70px + 210px);

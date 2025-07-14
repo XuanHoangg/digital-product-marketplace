@@ -1,13 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import OTPPopup from "../../Auth/OTPPopup/OTPPopup";
 
-import { getUserProfile } from "../../../service/user/userAPI";
+import { getUserProfile, putProfile } from "../../../service/user/userAPI";
+import { getOTP, verifyOTP } from "../../../service/auth/authAPI";
+import { LiaStarSolid } from "react-icons/lia";
+import { BiErrorCircle } from "react-icons/bi";
+
+import { toast } from "react-toastify";
 
 import "./UserInfor.scss";
 
 const UserInfor = () => {
   const userId = useSelector((state) => state.auth.account.userId);
-
+  const fullnameRef = useRef();
+  const emailRef = useRef();
+  const phoneRef = useRef();
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -17,17 +25,27 @@ const UserInfor = () => {
   const [postalCode, setPostalCode] = useState("");
   const [country, setCountry] = useState("");
   const [isEmailVerified, setIsEmailVerified] = useState(false);
+
+  const [isOTPPopupOpen, setIsOTPPopupOpen] = useState(false);
+
   useEffect(() => {
     getUserData();
   }, []);
   const getUserData = async () => {
     let data = await getUserProfile(userId);
-    // console.log("getUserData", data);
-
     if (data?.status === 0) {
-      setFullname(data.data.fullName);
+      if (data.data.fullName === "Chưa có tên") {
+        setFullname("");
+      } else {
+        setFullname(data.data.fullName);
+      }
+      if (data.data.phoneNumber === "Chưa có số điện thoại") {
+        setPhone("");
+      } else {
+        setPhone(data.data.phoneNumber);
+      }
       setEmail(data.data.email);
-      setPhone(data.data.phoneNumber);
+
       setStreet(data.data.street);
       setCity(data.data.city);
       setDistrict(data.data.district);
@@ -36,54 +54,130 @@ const UserInfor = () => {
       setIsEmailVerified(data.data.isEmailVerified);
     }
   };
-  //   const [formData, setFormData] = useState({
-  //     fullName: "Vũ Đình Xuân Hoàng",
-  //     email: "vh@gmail.com",
-  //     phone: "0123456789",
-  //     address: "123 Main Street",
-  //     city: "Long An",
-  //     district: "Châu Thành",
-  //     postalCode: "000000",
-  //     country: "Việt Nam",
-  //   });
-
   const handleInputChange = (e) => {
-    setFullname(e.target.value);
-    setEmail(e.target.value);
-    setPhone(e.target.value);
-    setStreet(e.target.value);
-    setCity(e.target.value);
-    setDistrict(e.target.value);
-    setPostalCode(e.target.value);
-    setCountry(e.target.value);
+    const { name, value } = e.target;
+
+    switch (name) {
+      case "fullName":
+        setFullname(value);
+        break;
+      case "email":
+        setEmail(value);
+        break;
+      case "phone":
+        setPhone(value);
+        break;
+      case "address":
+        setStreet(value);
+        break;
+      case "city":
+        setCity(value);
+        break;
+      case "district":
+        setDistrict(value);
+        break;
+      case "postalCode":
+        setPostalCode(value);
+        break;
+      case "country":
+        setCountry(value);
+        break;
+      default:
+        break;
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted with data:", {
+    if (!fullname) {
+      toast.error("Vui lòng nhập họ tên!");
+      fullnameRef.current.focus();
+      return;
+    }
+
+    if (!email) {
+      toast.error("Vui lòng nhập email!");
+      emailRef.current.focus();
+      return;
+    }
+
+    if (!phone) {
+      toast.error("Vui lòng nhập số điện thoại!");
+      phoneRef.current.focus();
+      return;
+    }
+    let data = await putProfile(
+      userId,
       fullname,
-      email,
       phone,
+      email,
       street,
       city,
       district,
       postalCode,
-      country,
-    });
-  };
+      country
+    );
+    console.log("Update response:", data);
 
+    if (data.status === 0) {
+      toast.success(data.data);
+      await getUserData();
+    } else {
+      toast.error("abc");
+    }
+  };
+  // Hàm xử lý xác nhận OTP
+  const handleVerifyOTP = async (email, otpCode) => {
+    try {
+      let data = await verifyOTP(email, otpCode);
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      if (data.status === 0) {
+        toast.success("Xác nhận OTP thành công!");
+        setIsOTPPopupOpen(false);
+        await getUserData();
+        return;
+      }
+      if (data.status === 3) {
+        toast.error(data.messageResult);
+        return;
+      }
+    } catch (error) {
+      toast.error("Mã OTP không đúng!");
+    }
+  };
+  // Hàm xử lý gửi lại OTP
+  const handleResendOTP = async () => {
+    try {
+      await getOTP(email);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      toast.success("Đã gửi lại mã OTP!");
+    } catch (error) {
+      toast.error("Không thể gửi lại mã OTP!");
+    }
+  };
+  const verifiedEmail = async () => {
+    setIsOTPPopupOpen(true);
+    await getOTP(email);
+  };
   return (
     <div className="user-info">
       <div className="user-info__container">
         <div className="user-info__header">
           <h1 className="user-info__title">Thông tin cá nhân</h1>
+          <p>
+            Lưu ý các thông tin có <LiaStarSolid color="red" /> là những thông
+            tin bắt buộc, bạn phải hoàn thành cập nhật để tiếp tục mua hàng.
+          </p>
         </div>
 
         <form className="user-info__form" onSubmit={handleSubmit}>
           <div className="form-section">
             <div className="form-group">
-              <label className="form-label">Họ tên</label>
+              <label className="form-label">
+                Họ tên <LiaStarSolid color="red" />
+              </label>
               <input
+                ref={fullnameRef}
                 type="text"
                 name="fullName"
                 value={fullname}
@@ -94,32 +188,42 @@ const UserInfor = () => {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Email</label>
+              <label className="form-label">
+                Email <LiaStarSolid color="red" />
+              </label>
               <div className="form-input-wrapper">
                 <input
+                  ref={emailRef}
                   type="email"
                   name="email"
                   value={email}
                   onChange={handleInputChange}
                   className="form-input"
                   placeholder="vh@gmail.com"
+                  disabled
                 />
                 <span className="form-input-status form-input-status--verified">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path
-                      d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                  {isEmailVerified ? "Đã xác minh" : "Chưa xác minh"}
+                  {isEmailVerified ? (
+                    <span>Đã xác minh</span>
+                  ) : (
+                    <span
+                      onClick={verifiedEmail}
+                      style={{ cursor: "pointer", color: "red" }}
+                    >
+                      Chưa xác minh
+                    </span>
+                  )}
                 </span>
               </div>
             </div>
 
             <div className="form-group">
-              <label className="form-label">Số điện thoại</label>
+              <label className="form-label">
+                Số điện thoại <LiaStarSolid color="red" />
+              </label>
               <input
-                type="tel"
+                ref={phoneRef}
+                type="number"
                 name="phone"
                 value={phone}
                 onChange={handleInputChange}
@@ -159,17 +263,14 @@ const UserInfor = () => {
 
               <div className="form-group form-group--half">
                 <label className="form-label">Quận/Huyện</label>
-                <select
+                <input
+                  type="text"
                   name="district"
                   value={district}
                   onChange={handleInputChange}
-                  className="form-select"
-                >
-                  <option value="Châu Thành">Châu Thành</option>
-                  <option value="Tân An">Tân An</option>
-                  <option value="Cần Đước">Cần Đước</option>
-                  <option value="Cần Giuộc">Cần Giuộc</option>
-                </select>
+                  className="form-input"
+                  placeholder="Châu Thành"
+                />
               </div>
 
               <div className="form-group form-group--half">
@@ -184,7 +285,6 @@ const UserInfor = () => {
                 />
               </div>
             </div>
-
             <div className="form-group">
               <label className="form-label">Quốc gia</label>
               <select
@@ -194,9 +294,25 @@ const UserInfor = () => {
                 className="form-select"
               >
                 <option value="Việt Nam">Việt Nam</option>
-                <option value="United States">United States</option>
-                <option value="United Kingdom">United Kingdom</option>
+                <option value="Brazil">Brazil</option>
                 <option value="Canada">Canada</option>
+                <option value="China">China</option>
+                <option value="France">France</option>
+                <option value="Germany">Germany</option>
+                <option value="India">India</option>
+                <option value="Indonesia">Indonesia</option>
+                <option value="Italy">Italy</option>
+                <option value="Japan">Japan</option>
+                <option value="Mexico">Mexico</option>
+                <option value="Netherlands">Netherlands</option>
+                <option value="Russia">Russia</option>
+                <option value="Saudi Arabia">Saudi Arabia</option>
+                <option value="South Korea">South Korea</option>
+                <option value="Spain">Spain</option>
+                <option value="Switzerland">Switzerland</option>
+                <option value="Turkey">Turkey</option>
+                <option value="United Kingdom">United Kingdom</option>
+                <option value="United States">United States</option>
               </select>
             </div>
           </div>
@@ -208,6 +324,13 @@ const UserInfor = () => {
           </div>
         </form>
       </div>
+      <OTPPopup
+        isOpen={isOTPPopupOpen}
+        onClose={() => setIsOTPPopupOpen(false)}
+        email={email}
+        onVerify={handleVerifyOTP}
+        onResend={handleResendOTP}
+      />
     </div>
   );
 };

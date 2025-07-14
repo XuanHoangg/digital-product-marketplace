@@ -67,7 +67,6 @@ const Register = () => {
   // Hàm xử lý xác nhận OTP
   const handleVerifyOTP = async (email, otpCode) => {
     try {
-      // console.log("Verifying OTP:", email, otpCode);
       let data = await verifyOTP(email, otpCode);
       await new Promise((resolve) => setTimeout(resolve, 1500));
       if (data.status === 0) {
