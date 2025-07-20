@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import OTPPopup from "../../Auth/OTPPopup/OTPPopup";
-
+import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { getUserProfile, putProfile } from "../../../service/user/userAPI";
 import { getOTP, verifyOTP } from "../../../service/auth/authAPI";
 import { LiaStarSolid } from "react-icons/lia";
 import { BiErrorCircle } from "react-icons/bi";
+import { VscDebugContinue } from "react-icons/vsc";
 
 import { toast } from "react-toastify";
 
@@ -13,6 +14,11 @@ import "./UserInfor.scss";
 
 const UserInfor = () => {
   const userId = useSelector((state) => state.auth.account.userId);
+  const roleSlice = useSelector((state) => state.auth.account.role);
+
+  const isverifiEmailSlice = useSelector(
+    (state) => state.auth.account.isEmailVerified
+  );
   const fullnameRef = useRef();
   const emailRef = useRef();
   const phoneRef = useRef();
@@ -51,7 +57,8 @@ const UserInfor = () => {
       setDistrict(data.data.district);
       setPostalCode(data.data.postalCode);
       setCountry(data.data.country);
-      setIsEmailVerified(data.data.isEmailVerified);
+      setIsEmailVerified(isverifiEmailSlice);
+      // console.log("User data:", data.data);
     }
   };
   const handleInputChange = (e) => {
@@ -117,7 +124,7 @@ const UserInfor = () => {
       postalCode,
       country
     );
-    console.log("Update response:", data);
+    // console.log("Update response:", data);
 
     if (data.status === 0) {
       toast.success(data.data);

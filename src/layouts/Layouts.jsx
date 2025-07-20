@@ -15,14 +15,15 @@ import "./layouts.scss";
 const Layouts = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const userId = useSelector((state) => state.auth.account.userId);
+  const isAuthenticated = useSelector((state) => state?.auth?.isAuthenticated);
+  const userId = useSelector((state) => state?.auth?.account?.userId);
   const [showDropdown, setShowDropdown] = useState(false);
   const [fullname, setFullname] = useState("");
   useEffect(() => {
     getUserData();
   }, []);
   const getUserData = async () => {
+    if (!isAuthenticated) return;
     let data = await getUserProfile(userId);
     // console.log("getUserData", data);
 

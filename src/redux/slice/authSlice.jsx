@@ -6,6 +6,7 @@ const initialState = {
     refreshToken: "",
     userId: "",
     role: "",
+    isEmailVerified: false,
   },
   isAuthenticated: false,
 };
@@ -19,6 +20,7 @@ const handleLoginSuccess = (state, action) => {
     refreshToken: data.token.refreshToken,
     userId: data.userId,
     role: data.role,
+    isEmailVerified: data.isEmailVerified,
   };
   state.isAuthenticated = true;
 };
@@ -31,6 +33,7 @@ const handleLogout = (state, action) => {
     refreshToken: data.token.refreshToken,
     userId: "",
     role: "",
+    isEmailVerified: false,
   };
   state.isAuthenticated = false;
 };

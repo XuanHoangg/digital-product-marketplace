@@ -88,9 +88,16 @@ const Login = () => {
               />
               <span>Ghi nhớ</span>
             </label> */}
-            <a href="#" className="login-forgot">
+            <NavLink
+              to="/forgot-password"
+              className="login-forgot"
+              // style={{ color: "black" }}
+            >
               Quên mật khẩu?
-            </a>
+            </NavLink>
+            {/* <a href="#" className="login-forgot">
+              Quên mật khẩu?
+            </a> */}
           </div>
 
           <button type="submit" className="login-btn login-btn-primary">

@@ -1,15 +1,12 @@
-// User Info Styles
 .user-info {
-  //   background-color: #f8f9fa;
   min-height: 100vh;
   padding: 0;
 
   &__container {
     max-width: 1000px;
     margin: 0 auto;
-    // background-color: #ffffff;
+
     min-height: 100vh;
-    // padding: 40px 48px;
 
     @media (max-width: 768px) {
       padding: 24px 20px;
@@ -183,7 +180,6 @@
       display: flex;
       justify-content: flex-end;
       padding-top: 24px;
-      //   border-top: 1px solid #e5e7eb;
 
       @media (max-width: 768px) {
         justify-content: center;
@@ -225,7 +221,6 @@
   }
 }
 
-// Mobile specific adjustments
 @media (max-width: 768px) {
   .user-info {
     &__container {
@@ -241,3 +236,5 @@
     }
   }
 }
+
+// button styles

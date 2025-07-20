@@ -32,4 +32,18 @@ const verifyOTP = async (email, secretCode) => {
     secretCode,
   });
 };
-export { postRegister, postLogin, getOTP, verifyOTP };
+
+const putChangePassword = async (
+  userId,
+  currentPassword,
+  newPassword,
+  confirmNewPassword
+) => {
+  return await axios.put("api/Buyer/change-password", {
+    userId,
+    currentPassword,
+    newPassword,
+    confirmNewPassword,
+  });
+};
+export { postRegister, postLogin, getOTP, verifyOTP, putChangePassword };
