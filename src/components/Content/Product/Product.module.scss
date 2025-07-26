@@ -1,14 +1,75 @@
-.product {
-  display: flex;
-  gap: 16px;
+.product__container {
   padding: 24px;
-
-  &__filters {
-    flex: 0 0 250px;
+  .product__title {
+    color: #0f172a;
+    font-weight: bold;
   }
+  .product__description {
+    color: #64748b;
+  }
+  .product {
+    display: flex;
+    gap: 16px;
 
-  &__list {
-    flex: 1;
+    &__filters {
+      flex: 0 0 280px;
+    }
+
+    &__list {
+      flex: 1;
+    }
+    .product__resultBox {
+      font-size: 13px;
+      color: #4b5563; // xám vừa
+      background-color: #f9fbfc;
+      border: 1px solid #e5edf5;
+      border-radius: 10px; // bo tròn hoàn toàn
+      padding: 6px 16px;
+      // width: fit-content;
+      margin: 16px auto; // căn giữa theo chiều ngang
+      text-align: center;
+
+      strong {
+        font-weight: 600;
+      }
+    }
+    .product__actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 16px;
+
+      button {
+        flex: 1;
+        padding: 8px 0;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        border: 1px solid transparent;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+      }
+
+      .reset {
+        background-color: #ffffff;
+        color: #374151;
+        border: 1px solid #d1d5db;
+
+        &:hover {
+          background-color: #f9fafb;
+        }
+      }
+
+      .apply {
+        background-color: #3b82f6;
+        color: #ffffff;
+        border: 1px solid #3b82f6;
+
+        &:hover {
+          background-color: #2563eb;
+        }
+      }
+    }
   }
 }
 

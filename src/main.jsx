@@ -17,9 +17,7 @@ import ForgotPassword from "./components/Auth/ForgotPassword/ForgotPassword.jsx"
 import HomePage from "./components/Content/HomePage/HomePage.jsx";
 // products and children
 import Product from "./components/Content/Product/Product.jsx";
-// import ProductCard from "@components/Content/Product/ProductCard/ProductCard.jsx";
-// import ProductChild from "./components/Content/Product/ProductChild/ProductChild.jsx";
-// import ProductFilters from "./components/Content/Product/ProductFilters/RatingFilter.jsx";
+import DetailProduct from "./components/Content/Product/ProductDetail/ProductDetail.jsx";
 //
 import Service from "./components/Content/Service/Service.jsx";
 import Contact from "./components/Content/Contact/Contact.jsx";
@@ -44,7 +42,10 @@ createRoot(document.getElementById("root")).render(
           <Routes>
             <Route path="/" element={<App />}>
               <Route index element={<HomePage />} />
+
               <Route path="/product" element={<Product />} />
+              <Route path="/product/:id" element={<DetailProduct />} />
+
               <Route path="/service" element={<Service />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/question" element={<FAQPage />} />

@@ -1,0 +1,173 @@
+.evaluate {
+  padding: 2rem 0;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    .title {
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+
+    .writeButton {
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+  }
+
+  .ratingSection {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    margin-top: 1rem;
+
+    // Giới hạn độ rộng tổng thể để gọn lại
+    max-width: 600px;
+
+    .ratingSummary {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100px;
+
+      .average {
+        font-size: 2.5rem;
+        font-weight: bold;
+      }
+
+      .stars {
+        color: #f59e0b;
+        font-size: 1.25rem;
+      }
+
+      .count {
+        color: #6b7280;
+        font-size: 0.875rem;
+      }
+    }
+
+    .ratingBreakdown {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      padding-top: 0.25rem;
+
+      .barGroup {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        .starLabel {
+          width: 1rem;
+          font-size: 0.875rem;
+        }
+
+        .bar {
+          background: #e5e7eb;
+          flex: 1;
+          height: 6px;
+          border-radius: 3px;
+          overflow: hidden;
+
+          div {
+            height: 100%;
+            background-color: #f59e0b;
+            border-radius: 3px;
+          }
+        }
+
+        .percent {
+          width: 2.5rem;
+          font-size: 0.875rem;
+          text-align: left;
+        }
+      }
+    }
+  }
+
+  .reviews {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    .title {
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    .reviewCard {
+      border: 1px solid #e5e7eb;
+      padding: 1rem;
+      border-radius: 0.5rem;
+
+      .headerReview {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+
+        .avatar {
+          background-color: #dbeafe;
+          color: #3b82f6;
+          font-weight: bold;
+          padding: 0.5rem;
+          border-radius: 50%;
+          width: 2.5rem;
+          height: 2.5rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .name {
+          font-weight: 600;
+        }
+
+        .role {
+          font-size: 0.875rem;
+          color: #6b7280;
+        }
+      }
+
+      .commentTitle {
+        font-weight: 600;
+        margin-top: 0.5rem;
+      }
+
+      .comment {
+        margin-top: 0.25rem;
+      }
+
+      .date {
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+        color: #6b7280;
+
+        span {
+          color: #f59e0b;
+        }
+      }
+    }
+  }
+
+  .viewMore {
+    margin: 1.5rem auto 0;
+    display: block;
+    background-color: white;
+    border: 1px solid #d1d5db;
+    padding: 0.5rem 1rem;
+    margin-top: 1.5rem;
+    cursor: pointer;
+    border-radius: 6px;
+    // margin: 1.5rem auto 0;
+  }
+}

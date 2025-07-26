@@ -16,4 +16,9 @@ const getProducts = async (
     },
   });
 };
-export { getProducts };
+const getDetailProduct = async (ProjectId) => {
+  return await axios.get("api/Buyer/product-detail", {
+    params: { ProjectId },
+  });
+};
+export { getProducts, getDetailProduct };

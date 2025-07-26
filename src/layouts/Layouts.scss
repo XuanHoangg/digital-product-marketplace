@@ -65,7 +65,7 @@ body {
     align-items: center;
     text-decoration: none;
     color: $text-dark;
-
+    cursor: pointer;
     &-icon {
       width: 40px;
       height: 40px;
@@ -116,7 +116,7 @@ body {
       display: flex;
       list-style: none;
       gap: 30px;
-
+      margin-bottom: 0;
       @include respond-to(tablet) {
         flex-direction: column;
         padding: 20px;
@@ -172,6 +172,16 @@ body {
       @include respond-to(tablet) {
         transform: translateX(0);
       }
+    }
+    .header__cart-button {
+      background: none;
+      font-size: 30px;
+      border: none;
+      color: gray;
+      display: flex;
+      align-items: center;
+      // cursor: pointer;
+      padding: 0;
     }
   }
 
@@ -295,7 +305,7 @@ body {
     display: flex;
     align-items: center;
     margin-bottom: 20px;
-
+    cursor: pointer;
     @include respond-to(tablet) {
       justify-content: center;
     }

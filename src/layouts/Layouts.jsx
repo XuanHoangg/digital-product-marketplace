@@ -3,13 +3,19 @@ import { useSelector, useDispatch } from "react-redux";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Nav from "react-bootstrap/Nav";
 import { Outlet, NavLink, useNavigate } from "react-router-dom";
+// Icon
 import { FaFacebook } from "react-icons/fa6";
 import { FaYoutube } from "react-icons/fa";
 import { AiFillInstagram } from "react-icons/ai";
+import { TiShoppingCart } from "react-icons/ti";
 import { FaReddit } from "react-icons/fa";
+//API
 import { getUserProfile } from "../service/user/userAPI";
 import { getShortName } from "../utils/helper";
+// Redux
 import { logout } from "../redux/slice/authSlice";
+// Components
+import Cart from "../components/Content/Cart/Cart";
 import "./layouts.scss";
 
 const Layouts = () => {
@@ -19,14 +25,13 @@ const Layouts = () => {
   const userId = useSelector((state) => state?.auth?.account?.userId);
   const [showDropdown, setShowDropdown] = useState(false);
   const [fullname, setFullname] = useState("");
+  const [isCartOpen, setIsCartOpen] = useState(false);
   useEffect(() => {
     getUserData();
   }, []);
   const getUserData = async () => {
     if (!isAuthenticated) return;
     let data = await getUserProfile(userId);
-    // console.log("getUserData", data);
-
     if (data?.status === 0) {
       const initials = getShortName(data.data.fullName);
       setFullname(initials);
@@ -48,7 +53,7 @@ const Layouts = () => {
     <div className="digital-market-layout">
       <header className="header">
         <div className="header__container">
-          <div className="header__logo">
+          <div className="header__logo" onClick={() => navigate("/")}>
             <div className="header__logo-icon">D</div>
             <span className="header__logo-text">DigitalMarket</span>
           </div>
@@ -136,17 +141,13 @@ const Layouts = () => {
                 </div>
               )}
             </Nav>
-            {/* --- */}
-            {/* <NavLink to="/login" className="header__btn header__btn--login">
-              Đăng nhập
-            </NavLink>
-
-            <NavLink
-              to="/register"
-              className="header__btn header__btn--register"
+            <button
+              className="header__cart-button"
+              onClick={() => setIsCartOpen(true)}
             >
-              Đăng ký
-            </NavLink> */}
+              <TiShoppingCart />
+            </button>
+            <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
           </div>
 
           <button className="header__mobile-toggle" onClick={toggleMobileMenu}>

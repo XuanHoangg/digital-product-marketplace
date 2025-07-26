@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import styles from "./ProductChild.module.scss";
+import { TiShoppingCart } from "react-icons/ti";
 
 const ProductChild = ({
   products,
@@ -8,7 +11,11 @@ const ProductChild = ({
   pageSize,
   onPageChange,
 }) => {
-  console.log("ProductChild products:", products);
+  const navigate = useNavigate();
+  useEffect(() => {
+    console.log("ProductChild updated products:", products);
+  }, [products]);
+  // console.log("ProductChild products:", products);
 
   const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
 
@@ -16,19 +23,33 @@ const ProductChild = ({
     <>
       <div className={styles.grid}>
         {products.map((p) => (
-          <div key={p.productId} className={styles.item}>
+          <div
+            key={p.productId}
+            className={styles.item}
+            onClick={() =>
+              navigate(`/product/${p.productId}`, {
+                state: { categoryName: p.categoryName },
+              })
+            }
+          >
             <div className={styles.item__image}>
-              <img
-                src={`data:image/png;base64,${p.productImage}`}
-                alt={p.productName}
-              />
+              <img src={p.productImage} alt={p.productName} />
             </div>
             <div className={styles.item__info}>
-              <h4>{p.productName}</h4>
-              <div className={styles.item__price}>
-                {p.price.toLocaleString()}₫
+              <span className={styles.item__tag}>{p.categoryName}</span>
+              <h4 className={styles.item__title}>{p.productName}</h4>
+              <div className={styles.item__rating}>
+                {"★★★★★"}{" "}
+                <span className={styles.item__reviewCount}>
+                  {p.ratingOverallCount}
+                </span>
               </div>
-              <button className={styles.item__button}>Thêm vào giỏ</button>
+              <div className={styles.item__price}>
+                {new Intl.NumberFormat("vi-VN").format(p.price)}₫
+                <button className={styles.item__button}>
+                  <TiShoppingCart style={{ fontSize: "24px" }} />
+                </button>
+              </div>
             </div>
           </div>
         ))}

@@ -46,7 +46,7 @@ const PopupAddProduct = ({ onClose, storeId }) => {
         storeId: storeId,
         productName: formData.productName,
         description: formData.description,
-        categoryId: "ebook",
+        categoryId: "course",
         originalPrice: parseFloat(formData.price),
         sumaryFeature: formData.sumaryFeature,
         images: formData.images,

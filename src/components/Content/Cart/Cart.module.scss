@@ -1,0 +1,169 @@
+.cartOverlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 999;
+
+  &.open {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+.cartPanel {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 400px;
+  max-width: 100%;
+  height: 100%;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+  animation: slideIn 0.3s ease forwards;
+  border-radius: 8px 0 0 8px;
+  overflow-y: auto;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.cartHeader {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+
+  h3 {
+    margin: 0;
+  }
+
+  .cartClose {
+    cursor: pointer;
+  }
+}
+
+.cartBody {
+  padding: 1rem;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.cartItem {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  gap: 0.8rem;
+
+  .cartItemBadge {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: #3b82f6;
+    color: white;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &.green {
+      background: #10b981;
+    }
+
+    &.orange {
+      background: #f59e0b;
+    }
+  }
+
+  .cartItemInfo {
+    flex: 1;
+
+    .cartItemTitle {
+      font-weight: 600;
+    }
+
+    .cartItemSubtitle {
+      font-size: 0.85rem;
+      color: #6b7280;
+    }
+
+    .cartItemOldPrice {
+      text-decoration: line-through;
+      color: #9ca3af;
+      font-size: 0.85rem;
+    }
+  }
+
+  .cartItemPrice {
+    font-weight: bold;
+    white-space: nowrap;
+  }
+}
+
+.cartSummary {
+  padding: 1rem 0;
+  border-top: 1px solid #e5e7eb;
+
+  .summaryItem {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+
+  .summaryTotal {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #111827;
+    margin-top: 1rem;
+  }
+
+  .free {
+    color: #10b981;
+    font-weight: bold;
+  }
+}
+
+.cartActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  .checkoutBtn {
+    background: #2563eb;
+    color: white;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .keepShoppingBtn {
+    background: transparent;
+    border: none;
+    color: #6b7280;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+}
+@media (max-width: 480px) {
+  .cartPanel {
+    width: 100%;
+    border-radius: 0;
+  }
+}
