@@ -59,7 +59,6 @@ const Layout = () => {
         onClick={() => setSidebarOpen(false)}
       ></div>
 
-      {/* Nút menu mobile được đặt ở vị trí fixed */}
       <button
         className={styles.mobileMenuBtn}
         onClick={() => setSidebarOpen(true)}

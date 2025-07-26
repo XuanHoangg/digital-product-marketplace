@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import styles from "./PopupAddProduct.module.scss";
+import { useSelector } from "react-redux";
+
 import { postAddProduct } from "@service/seller/product/productAPI";
 import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 import { convertFileToBase64 } from "@utils/helper.js";
-const PopupAddProduct = ({ onClose }) => {
+const PopupAddProduct = ({ onClose, storeId }) => {
+  const userId = useSelector((state) => state?.auth?.account?.userId);
+
   const [formData, setFormData] = useState({
     productName: "",
     category: "",
@@ -38,11 +42,11 @@ const PopupAddProduct = ({ onClose }) => {
 
     try {
       const payload = {
-        sellerId: "0cf705af-6ba1-4374-a2b2-16c6a9e198a5",
-        storeId: "8ca1d64d-4c30-46ac-8033-224bafa78392",
+        sellerId: userId,
+        storeId: storeId,
         productName: formData.productName,
         description: formData.description,
-        categoryId: "course",
+        categoryId: "ebook",
         originalPrice: parseFloat(formData.price),
         sumaryFeature: formData.sumaryFeature,
         images: formData.images,
@@ -50,6 +54,12 @@ const PopupAddProduct = ({ onClose }) => {
 
       console.log("Payload to send:", payload);
       const data = await postAddProduct(payload);
+      if (data.status === 0) {
+        toast.success(data.messageResult + data.data);
+      }
+      if (data.status === 3) {
+        toast.error(data.messageResult);
+      }
       console.log("Response data:", data);
 
       // onClose();

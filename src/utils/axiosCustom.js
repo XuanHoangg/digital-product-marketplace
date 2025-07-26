@@ -1,5 +1,7 @@
 import axios from "axios";
 import { store } from "../redux/store";
+import NProgress from "nprogress";
+
 const instance = axios.create({
   baseURL: "http://localhost:5227/",
 });
@@ -8,7 +10,7 @@ instance.interceptors.request.use(
   function (config) {
     const state = store.getState();
     const accessToken = state?.auth?.account?.accessToken;
-
+    NProgress.start();
     if (accessToken) {
       config.headers["Authorization"] = "Bearer " + accessToken;
     }
@@ -30,6 +32,8 @@ instance.interceptors.response.use(
     //   // store.dispatch(logoutAction());
     //   window.location.href = "/login";
     // }
+    NProgress.done();
+
     return response && response.data ? response.data : response;
   },
   function (error) {

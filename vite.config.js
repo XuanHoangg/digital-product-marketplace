@@ -16,6 +16,7 @@ export default defineConfig({
       "@service": path.resolve(__dirname, "src/service"),
       "@components": path.resolve(__dirname, "src/components"),
       "@utils": path.resolve(__dirname, "src/utils"),
+
       // Thêm alias khác nếu cần
     },
   },

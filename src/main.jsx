@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 // import "./index.css";
+import "nprogress/nprogress.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
@@ -14,7 +15,12 @@ import Register from "./components/Auth/Register/Register.jsx";
 import ForgotPassword from "./components/Auth/ForgotPassword/ForgotPassword.jsx";
 // user
 import HomePage from "./components/Content/HomePage/HomePage.jsx";
+// products and children
 import Product from "./components/Content/Product/Product.jsx";
+// import ProductCard from "@components/Content/Product/ProductCard/ProductCard.jsx";
+// import ProductChild from "./components/Content/Product/ProductChild/ProductChild.jsx";
+// import ProductFilters from "./components/Content/Product/ProductFilters/RatingFilter.jsx";
+//
 import Service from "./components/Content/Service/Service.jsx";
 import Contact from "./components/Content/Contact/Contact.jsx";
 import NotFound from "./components/Content/NotFound/NotFound.jsx";

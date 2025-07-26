@@ -1,94 +1,140 @@
 // Store.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+
 import PopupAddProduct from "./../Popup/PopupAddProduct/PopupAddProduct.jsx";
 import styles from "./Store.module.scss";
-
+import { getStoreId } from "@service/seller/sellerAPI";
+import { getProducts } from "@service/seller/product/productAPI";
 const Store = () => {
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
+  const userId = useSelector((state) => state?.auth?.account?.userId);
 
-  const products = [
-    {
-      id: 1,
-      category: "UI KIT",
-      title: "Premium UI Kit Bundle",
-      price: "1.250.000đ",
-      sold: "42 bản đã bán",
-      status: "Hoạt động",
-      statusType: "active",
-      image: "/api/placeholder/280/160",
-    },
-    {
-      id: 2,
-      category: "Khóa học",
-      title: "Photography Masterclass",
-      price: "2.900.000đ",
-      sold: "36 bản đã bán",
-      status: "Hoạt động",
-      statusType: "active",
-      image: "/api/placeholder/280/160",
-    },
-    {
-      id: 3,
-      category: "Khóa học",
-      title: "Business Strategy Course",
-      price: "1.800.000đ",
-      sold: "29 bản đã bán",
-      status: "Hoạt động",
-      statusType: "active",
-      image: "/api/placeholder/280/160",
-    },
-    {
-      id: 4,
-      category: "3D Item",
-      title: "Icon Library Pro",
-      price: "700.000đ",
-      sold: "22 bản đã bán",
-      status: "Đang chờ",
-      statusType: "pending",
-      image: "/api/placeholder/280/160",
-    },
-    {
-      id: 5,
-      category: "Ebook",
-      title: "Digital Marketing Guide",
-      price: "450.000đ",
-      sold: "18 bản đã bán",
-      status: "Hoạt động",
-      statusType: "active",
-      image: "/api/placeholder/280/160",
-    },
-    {
-      id: 6,
-      category: "Template",
-      title: "E-commerce Template",
-      price: "1.600.000đ",
-      sold: "15 bản đã bán",
-      status: "Bị chặn",
-      statusType: "blocked",
-      image: "/api/placeholder/280/160",
-    },
-    {
-      id: 7,
-      category: "3D Model",
-      title: "3D Character Pack",
-      price: "2.400.000đ",
-      sold: "12 bản đã bán",
-      status: "Hoạt động",
-      statusType: "active",
-      image: "/api/placeholder/280/160",
-    },
-    {
-      id: 8,
-      category: "Khóa học",
-      title: "Web Development Pro",
-      price: "1.800.000đ",
-      sold: "10 bản đã bán",
-      status: "Đang chờ",
-      statusType: "pending",
-      image: "/api/placeholder/280/160",
-    },
-  ];
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [storeId, setStoreId] = useState("");
+  const [products, setProducts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const PAGE_SIZE = 12;
+  useEffect(() => {
+    getStoreID();
+    fetchProducts();
+  }, [storeId, currentPage]);
+  const fetchProducts = async () => {
+    if (!storeId) return;
+
+    try {
+      const response = await getProducts({
+        SellerId: storeId,
+        PageSize: PAGE_SIZE,
+        PageCount: currentPage,
+      });
+
+      const mappedProducts = response.data.data.map((item) => ({
+        id: item.productId,
+        category: item.category,
+        productName: item.productName,
+        price: `${item.price.toLocaleString("vi-VN")}đ`,
+        quantitySelled: item.quantitySelled,
+        status: item.status,
+        ratingOverall: item.ratingOverall,
+        image: `data:image/png;base64,${item.image}`,
+      }));
+
+      setProducts(mappedProducts);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
+  const getStoreID = async () => {
+    try {
+      const response = await getStoreId(userId);
+      setStoreId(response.data.storeId);
+    } catch (error) {
+      console.error("Error fetching store ID:", error);
+    }
+  };
+
+  // const products = [
+  //   {
+  //     id: 1,
+  //     category: "UI KIT",
+  //     title: "Premium UI Kit Bundle",
+  //     price: "1.250.000đ",
+  //     sold: "42 bản đã bán",
+  //     status: "Hoạt động",
+  //     statusType: "active",
+  //     image: "/api/placeholder/280/160",
+  //   },
+  //   {
+  //     id: 2,
+  //     category: "Khóa học",
+  //     title: "Photography Masterclass",
+  //     price: "2.900.000đ",
+  //     sold: "36 bản đã bán",
+  //     status: "Hoạt động",
+  //     statusType: "active",
+  //     image: "/api/placeholder/280/160",
+  //   },
+  //   {
+  //     id: 3,
+  //     category: "Khóa học",
+  //     title: "Business Strategy Course",
+  //     price: "1.800.000đ",
+  //     sold: "29 bản đã bán",
+  //     status: "Hoạt động",
+  //     statusType: "active",
+  //     image: "/api/placeholder/280/160",
+  //   },
+  //   {
+  //     id: 4,
+  //     category: "3D Item",
+  //     title: "Icon Library Pro",
+  //     price: "700.000đ",
+  //     sold: "22 bản đã bán",
+  //     status: "Đang chờ",
+  //     statusType: "pending",
+  //     image: "/api/placeholder/280/160",
+  //   },
+  //   {
+  //     id: 5,
+  //     category: "Ebook",
+  //     title: "Digital Marketing Guide",
+  //     price: "450.000đ",
+  //     sold: "18 bản đã bán",
+  //     status: "Hoạt động",
+  //     statusType: "active",
+  //     image: "/api/placeholder/280/160",
+  //   },
+  //   {
+  //     id: 6,
+  //     category: "Template",
+  //     title: "E-commerce Template",
+  //     price: "1.600.000đ",
+  //     sold: "15 bản đã bán",
+  //     status: "Bị chặn",
+  //     statusType: "blocked",
+  //     image: "/api/placeholder/280/160",
+  //   },
+  //   {
+  //     id: 7,
+  //     category: "3D Model",
+  //     title: "3D Character Pack",
+  //     price: "2.400.000đ",
+  //     sold: "12 bản đã bán",
+  //     status: "Hoạt động",
+  //     statusType: "active",
+  //     image: "/api/placeholder/280/160",
+  //   },
+  //   {
+  //     id: 8,
+  //     category: "Khóa học",
+  //     title: "Web Development Pro",
+  //     price: "1.800.000đ",
+  //     sold: "10 bản đã bán",
+  //     status: "Đang chờ",
+  //     statusType: "pending",
+  //     image: "/api/placeholder/280/160",
+  //   },
+  // ];
 
   const handleAddProduct = () => {
     setIsPopupOpen(true);
@@ -214,7 +260,9 @@ const Store = () => {
         </button>
       </div>
 
-      {isPopupOpen && <PopupAddProduct onClose={handleClosePopup} />}
+      {isPopupOpen && (
+        <PopupAddProduct onClose={handleClosePopup} storeId={storeId} />
+      )}
     </div>
   );
 };

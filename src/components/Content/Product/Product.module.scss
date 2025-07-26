@@ -1,0 +1,19 @@
+.product {
+  display: flex;
+  gap: 16px;
+  padding: 24px;
+
+  &__filters {
+    flex: 0 0 250px;
+  }
+
+  &__list {
+    flex: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .product {
+    flex-direction: column;
+  }
+}
