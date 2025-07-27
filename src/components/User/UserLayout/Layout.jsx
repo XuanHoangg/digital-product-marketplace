@@ -56,7 +56,7 @@ const Layout = () => {
       }
 
       if (mini?.status === 0) {
-        setProfileImage(mini.data.profileImage); // new
+        setProfileImage(mini.data.profileImage);
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -140,6 +140,12 @@ const Layout = () => {
               <NavLink to="/seller" className="direct-to-store">
                 <VscDebugContinue />
                 Chuyển sang trang cửa hàng
+              </NavLink>
+            ) : null}
+            {roleSlice === "Admin" ? (
+              <NavLink to="/admin" className="direct-to-store">
+                <VscDebugContinue />
+                Chuyển sang trang quản trị
               </NavLink>
             ) : null}
           </div>
@@ -230,7 +236,7 @@ const Layout = () => {
       </div>
 
       <div className="layout__content">
-        <Outlet context={{ email }} />
+        <Outlet context={{ email, refreshUserData: getUserData }} />
       </div>
       <Popup
         show={modalShow}

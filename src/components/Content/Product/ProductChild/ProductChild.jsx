@@ -13,7 +13,7 @@ const ProductChild = ({
 }) => {
   const navigate = useNavigate();
   useEffect(() => {
-    console.log("ProductChild updated products:", products);
+    // console.log("ProductChild updated products:", products);
   }, [products]);
   // console.log("ProductChild products:", products);
 
@@ -39,9 +39,9 @@ const ProductChild = ({
               <span className={styles.item__tag}>{p.categoryName}</span>
               <h4 className={styles.item__title}>{p.productName}</h4>
               <div className={styles.item__rating}>
-                {"★★★★★"}{" "}
+                {p.ratingOverallAverage} {"★"}{" "}
                 <span className={styles.item__reviewCount}>
-                  {p.ratingOverallCount}
+                  ({p.ratingOverallCount} lượt đánh giá)
                 </span>
               </div>
               <div className={styles.item__price}>

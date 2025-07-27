@@ -35,7 +35,7 @@ const Product = () => {
         PAGE_SIZE,
         pageNumber
       );
-      // console.log("Fetch products response:", res);
+      console.log("Fetch products response:", res);
 
       if (res.status === 0) {
         setProducts(res.data.productIndexList || []);

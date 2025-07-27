@@ -1,7 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import OTPPopup from "../../Auth/OTPPopup/OTPPopup";
-import { Outlet, NavLink, useNavigate } from "react-router-dom";
+import {
+  Outlet,
+  NavLink,
+  useNavigate,
+  useOutletContext,
+} from "react-router-dom";
 import { getUserProfile, putProfile } from "../../../service/user/userAPI";
 import { getOTP, verifyOTP } from "../../../service/auth/authAPI";
 import { LiaStarSolid } from "react-icons/lia";
@@ -13,6 +18,7 @@ import { toast } from "react-toastify";
 import "./UserInfor.scss";
 
 const UserInfor = () => {
+  const { refreshUserData } = useOutletContext();
   const userId = useSelector((state) => state.auth.account.userId);
   const roleSlice = useSelector((state) => state.auth.account.role);
 
@@ -129,8 +135,9 @@ const UserInfor = () => {
     if (data.status === 0) {
       toast.success(data.data);
       await getUserData();
+      refreshUserData();
     } else {
-      toast.error("abc");
+      toast.error("Lỗi cập nhật thông tin!");
     }
   };
   // Hàm xử lý xác nhận OTP

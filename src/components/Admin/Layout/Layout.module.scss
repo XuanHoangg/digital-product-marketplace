@@ -1,0 +1,377 @@
+.dashboardContainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+// ================= HEADER =================
+.dashboardHeader {
+  height: 60px;
+  background: #1e293b;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+
+  .dashboardTitle {
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  @media (max-width: 768px) {
+    height: 50px;
+    padding: 0 15px;
+
+    .dashboardTitle {
+      font-size: 14px;
+    }
+  }
+}
+
+// ================= MAIN CONTENT =================
+.dashboardContent {
+  display: flex;
+  flex: 1;
+  position: relative;
+
+  &.sidebarOpen .sidebar {
+    left: 0;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+// ================= SIDEBAR =================
+.sidebar {
+  width: 260px;
+  background: white;
+  border-right: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+
+  .sidebarHeader {
+    padding: 20px;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .brandIcon {
+        width: 40px;
+        height: 40px;
+        background: #3b82f6;
+        color: white;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 18px;
+      }
+
+      .brandName {
+        font-weight: 600;
+        font-size: 16px;
+        color: #1e293b;
+      }
+    }
+
+    .sidebarCloseBtn {
+      background: none;
+      border: none;
+      color: #1e293b;
+      cursor: pointer;
+      display: none;
+    }
+  }
+
+  .sidebarNav {
+    flex: 1;
+    padding: 20px 0;
+
+    .sidebarItem {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 12px 20px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+      color: #64748b;
+
+      &:hover {
+        background: #f1f5f9;
+        color: #1e293b;
+      }
+
+      &.active {
+        background: #dbeafe;
+        color: #2563eb;
+        border-right: 3px solid #2563eb;
+
+        .sidebarIcon {
+          color: #2563eb;
+        }
+      }
+
+      .sidebarIcon {
+        flex-shrink: 0;
+      }
+
+      .sidebarLabel {
+        font-weight: 500;
+        font-size: 14px;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    height: 100%;
+    z-index: 1000;
+    transition: left 0.3s ease;
+    border-right: none;
+    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);
+
+    .sidebarHeader {
+      padding: 15px;
+
+      .brand {
+        .brandIcon {
+          width: 35px;
+          height: 35px;
+          font-size: 16px;
+        }
+
+        .brandName {
+          font-size: 15px;
+        }
+      }
+
+      .sidebarCloseBtn {
+        display: block;
+      }
+    }
+
+    .sidebarNav {
+      flex-direction: column;
+      padding: 10px 0;
+
+      .sidebarItem {
+        padding: 10px 20px;
+        border-radius: 6px;
+        border-right: none;
+
+        &.active {
+          background: #dbeafe;
+          border-bottom: 2px solid #2563eb;
+        }
+
+        .sidebarLabel {
+          font-size: 13px;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .sidebarNav .sidebarItem {
+      padding: 8px 12px;
+
+      .sidebarLabel {
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+// ================= OVERLAY =================
+.sidebarOverlay {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .sidebarOverlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .sidebarOverlay.show {
+    opacity: 1;
+    pointer-events: all;
+  }
+}
+
+// ================= PAGE CONTENT =================
+.mainContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  .contentHeader {
+    background: white;
+    padding: 20px;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .headerLeft {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .mobileMenuBtn {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #1e293b;
+      }
+
+      .pageTitle {
+        font-size: 24px;
+        font-weight: 600;
+        color: #1e293b;
+      }
+
+      .pageSubtitle {
+        color: #64748b;
+        font-size: 14px;
+      }
+    }
+
+    .headerRight {
+      .timeFilter {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #f8fafc;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.2s;
+
+        &:hover {
+          background: #e2e8f0;
+        }
+
+        .dropdownArrow {
+          font-size: 12px;
+          color: #64748b;
+        }
+      }
+    }
+
+    @media (max-width: 768px) {
+      padding: 15px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+
+      .headerLeft {
+        .mobileMenuBtn {
+          display: inline-block;
+        }
+
+        .pageTitle {
+          font-size: 20px;
+        }
+      }
+
+      .headerRight {
+        align-self: flex-end;
+      }
+    }
+
+    @media (max-width: 480px) {
+      padding: 12px;
+
+      .headerLeft {
+        .pageTitle {
+          font-size: 18px;
+        }
+
+        .pageSubtitle {
+          font-size: 13px;
+        }
+      }
+    }
+  }
+
+  .contentOutlet {
+    flex: 1;
+    padding: 20px;
+
+    @media (max-width: 768px) {
+      padding: 15px;
+    }
+
+    @media (max-width: 480px) {
+      padding: 12px;
+    }
+  }
+}
+
+// ================= MOBILE MENU BUTTON =================
+.mobileMenuBtn {
+  display: none;
+  position: fixed;
+  top: 10px;
+  left: 15px;
+  z-index: 1001;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  color: #64748b;
+
+  &:hover {
+    background: #f8fafc;
+    color: #1e293b;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  @media (max-width: 768px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media (max-width: 480px) {
+    top: 15px;
+    left: 15px;
+    padding: 8px;
+  }
+}

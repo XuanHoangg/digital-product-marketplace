@@ -13,14 +13,13 @@ const Login = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [remember, setRemember] = useState(false);
+
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log({ email, password });
+
     let data = await postLogin(email, password);
-    // console.log("dataLogin", data);
 
     if (data.status === 0) {
       toast.success("Đăng nhâp thành công!");
@@ -80,24 +79,9 @@ const Login = () => {
           </div>
 
           <div className="login-options">
-            {/* <label className="login-remember">
-              <input
-                type="checkbox"
-                checked={remember}
-                onChange={(e) => setRemember(e.target.checked)}
-              />
-              <span>Ghi nhớ</span>
-            </label> */}
-            <NavLink
-              to="/forgot-password"
-              className="login-forgot"
-              // style={{ color: "black" }}
-            >
+            <NavLink to="/forgot-password" className="login-forgot">
               Quên mật khẩu?
             </NavLink>
-            {/* <a href="#" className="login-forgot">
-              Quên mật khẩu?
-            </a> */}
           </div>
 
           <button type="submit" className="login-btn login-btn-primary">
