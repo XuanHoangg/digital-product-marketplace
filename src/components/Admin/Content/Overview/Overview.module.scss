@@ -1,0 +1,663 @@
+// Variables
+$primary-color: #4285f4;
+$secondary-color: #34a853;
+$warning-color: #fbbc04;
+$danger-color: #ea4335;
+$purple-color: #9c27b0;
+$text-primary: #1f2937;
+$text-secondary: #6b7280;
+$text-muted: #9ca3af;
+$border-color: #e5e7eb;
+$bg-light: #f9fafb;
+$white: #ffffff;
+$shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+  0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+// Mixins
+@mixin card {
+  background: $white;
+  border-radius: 12px;
+  box-shadow: $shadow;
+  border: 1px solid $border-color;
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// Main Container
+.overview {
+  padding: 24px;
+  background-color: $bg-light;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    sans-serif;
+
+  &__header {
+    margin-bottom: 32px;
+  }
+
+  &__title {
+    font-size: 32px;
+    font-weight: 700;
+    color: $text-primary;
+    margin: 0 0 8px 0;
+    line-height: 1.2;
+  }
+
+  &__subtitle {
+    font-size: 16px;
+    color: $text-secondary;
+    margin: 0;
+  }
+}
+
+// Stats Cards
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+
+  &__card {
+    @include card;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: $shadow-lg;
+    }
+
+    &--users .stats__icon {
+      background: linear-gradient(135deg, #4285f4, #1565c0);
+    }
+
+    &--sellers .stats__icon {
+      background: linear-gradient(135deg, #34a853, #2e7d32);
+    }
+
+    &--products .stats__icon {
+      background: linear-gradient(135deg, #fbbc04, #f57c00);
+    }
+
+    &--revenue .stats__icon {
+      background: linear-gradient(135deg, #9c27b0, #7b1fa2);
+    }
+  }
+
+  &__icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    @include flex-center;
+    flex-shrink: 0;
+  }
+
+  &__iconSymbol {
+    font-size: 24px;
+    filter: grayscale(100%) brightness(0) invert(1);
+  }
+
+  &__content {
+    flex: 1;
+  }
+
+  &__label {
+    font-size: 14px;
+    font-weight: 500;
+    color: $text-secondary;
+    margin: 0 0 4px 0;
+  }
+
+  &__value {
+    font-size: 28px;
+    font-weight: 700;
+    color: $text-primary;
+    margin: 0;
+    line-height: 1.2;
+  }
+}
+
+// Content Layout
+.content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+
+  &__left {
+    min-height: 400px;
+  }
+
+  &__right {
+    min-height: 400px;
+  }
+}
+
+// Chart Section
+.chart {
+  @include card;
+  padding: 24px;
+  height: 100%;
+
+  &__header {
+    @include flex-between;
+    margin-bottom: 32px;
+  }
+
+  &__title {
+    font-size: 20px;
+    font-weight: 600;
+    color: $text-primary;
+    margin: 0;
+  }
+
+  &__controls {
+    display: flex;
+    gap: 8px;
+  }
+
+  &__button {
+    padding: 8px 16px;
+    border: 1px solid $border-color;
+    background: $white;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: $text-secondary;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: $bg-light;
+    }
+
+    &--active {
+      background: $primary-color;
+      color: $white;
+      border-color: $primary-color;
+    }
+  }
+
+  &__content {
+    height: 300px;
+    @include flex-center;
+    border: 2px dashed $border-color;
+    border-radius: 8px;
+  }
+
+  &__placeholder {
+    color: $text-muted;
+    font-size: 16px;
+    margin: 0;
+  }
+}
+
+// Activity Section
+.activity {
+  @include card;
+  padding: 24px;
+  height: 100%;
+
+  &__header {
+    margin-bottom: 24px;
+  }
+
+  &__title {
+    font-size: 20px;
+    font-weight: 600;
+    color: $text-primary;
+    margin: 0;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  &__green {
+    background: $secondary-color;
+  }
+
+  &__blue {
+    background: $primary-color;
+  }
+
+  &__orange {
+    background: $warning-color;
+  }
+
+  &__purple {
+    background: $purple-color;
+  }
+
+  &__default {
+    background: $text-muted;
+  }
+
+  &__info {
+    flex: 1;
+    @include flex-between;
+  }
+
+  &__label {
+    font-size: 14px;
+    color: $text-secondary;
+    font-weight: 500;
+  }
+
+  &__value {
+    font-size: 16px;
+    font-weight: 600;
+    color: $text-primary;
+  }
+}
+
+// Bottom Section
+.bottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+
+  &__left {
+    min-height: 400px;
+  }
+
+  &__right {
+    min-height: 400px;
+  }
+}
+
+// Recent Activity
+.recentActivity {
+  @include card;
+  padding: 24px;
+  height: 100%;
+
+  &__header {
+    @include flex-between;
+    margin-bottom: 24px;
+  }
+
+  &__title {
+    font-size: 20px;
+    font-weight: 600;
+    color: $text-primary;
+    margin: 0;
+  }
+
+  &__viewAll {
+    background: none;
+    border: none;
+    color: $primary-color;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background: rgba($primary-color, 0.1);
+    }
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  &__item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  &__icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: $bg-light;
+    @include flex-center;
+    flex-shrink: 0;
+    font-size: 18px;
+  }
+
+  &__content {
+    flex: 1;
+  }
+
+  &__itemTitle {
+    font-size: 15px;
+    font-weight: 600;
+    color: $text-primary;
+    margin: 0 0 4px 0;
+    line-height: 1.3;
+  }
+
+  &__subtitle {
+    font-size: 14px;
+    color: $text-secondary;
+    margin: 0 0 6px 0;
+    line-height: 1.4;
+  }
+
+  &__time {
+    font-size: 13px;
+    color: $text-muted;
+  }
+}
+
+// Top Sellers
+.topSellers {
+  @include card;
+  padding: 24px;
+  height: 100%;
+
+  &__header {
+    @include flex-between;
+    margin-bottom: 24px;
+  }
+
+  &__title {
+    font-size: 20px;
+    font-weight: 600;
+    color: $text-primary;
+    margin: 0;
+  }
+
+  &__viewAll {
+    background: none;
+    border: none;
+    color: $primary-color;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background: rgba($primary-color, 0.1);
+    }
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  &__avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, $primary-color, $secondary-color);
+    @include flex-center;
+    color: $white;
+    font-weight: 600;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  &__info {
+    flex: 1;
+  }
+
+  &__name {
+    font-size: 16px;
+    font-weight: 600;
+    color: $text-primary;
+    margin: 0 0 6px 0;
+    line-height: 1.3;
+  }
+
+  &__meta {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  &__products {
+    font-size: 13px;
+    color: $text-secondary;
+  }
+
+  &__rating {
+    font-size: 13px;
+    color: $warning-color;
+    font-weight: 500;
+  }
+
+  &__revenue {
+    font-size: 16px;
+    font-weight: 600;
+    color: $text-primary;
+  }
+}
+
+// Responsive Design
+@media (max-width: 1200px) {
+  .content {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .bottom {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .overview {
+    padding: 16px;
+
+    &__title {
+      font-size: 24px;
+    }
+
+    &__subtitle {
+      font-size: 14px;
+    }
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+
+    &__card {
+      padding: 20px;
+    }
+
+    &__value {
+      font-size: 24px;
+    }
+  }
+
+  .content {
+    gap: 16px;
+    margin-bottom: 24px;
+
+    &__left,
+    &__right {
+      min-height: 300px;
+    }
+  }
+
+  .bottom {
+    gap: 16px;
+
+    &__left,
+    &__right {
+      min-height: 300px;
+    }
+  }
+
+  .chart {
+    padding: 20px;
+
+    &__title {
+      font-size: 18px;
+    }
+
+    &__content {
+      height: 200px;
+    }
+
+    &__controls {
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    &__button {
+      padding: 6px 12px;
+      font-size: 13px;
+    }
+  }
+
+  .activity {
+    padding: 20px;
+
+    &__title {
+      font-size: 18px;
+    }
+  }
+
+  .recentActivity {
+    padding: 20px;
+
+    &__title {
+      font-size: 18px;
+    }
+
+    &__icon {
+      width: 36px;
+      height: 36px;
+      font-size: 16px;
+    }
+  }
+
+  .topSellers {
+    padding: 20px;
+
+    &__title {
+      font-size: 18px;
+    }
+
+    &__avatar {
+      width: 40px;
+      height: 40px;
+      font-size: 14px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .overview {
+    padding: 12px;
+
+    &__title {
+      font-size: 20px;
+    }
+  }
+
+  .stats {
+    &__card {
+      padding: 16px;
+      gap: 12px;
+    }
+
+    &__icon {
+      width: 48px;
+      height: 48px;
+    }
+
+    &__iconSymbol {
+      font-size: 20px;
+    }
+
+    &__value {
+      font-size: 20px;
+    }
+  }
+
+  .chart {
+    padding: 16px;
+
+    &__header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    &__content {
+      height: 160px;
+    }
+  }
+
+  .activity {
+    padding: 16px;
+
+    &__item {
+      gap: 8px;
+    }
+  }
+
+  .recentActivity {
+    padding: 16px;
+
+    &__item {
+      gap: 12px;
+    }
+  }
+
+  .topSellers {
+    padding: 16px;
+
+    &__item {
+      gap: 12px;
+    }
+
+    &__meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+    }
+  }
+}

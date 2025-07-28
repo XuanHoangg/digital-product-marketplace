@@ -1,0 +1,454 @@
+.revenue {
+  padding: 24px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
+}
+
+// Header Section
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+.headerLeft {
+  .title {
+    font-size: 28px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0 0 8px 0;
+
+    @media (max-width: 768px) {
+      font-size: 24px;
+    }
+  }
+
+  .subtitle {
+    color: #666;
+    margin: 0;
+    font-size: 14px;
+  }
+}
+
+.headerRight {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+.periodSelect {
+  padding: 8px 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: white;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: #4285f4;
+  }
+
+  @media (max-width: 768px) {
+    flex: 1;
+  }
+}
+
+.exportBtn {
+  padding: 8px 16px;
+  background: #4285f4;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background: #3367d6;
+  }
+
+  @media (max-width: 768px) {
+    white-space: nowrap;
+  }
+}
+
+// Summary Cards
+.summaryCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 32px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f0f0f0;
+
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
+}
+
+.cardIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.cardContent {
+  flex: 1;
+
+  .cardLabel {
+    font-size: 14px;
+    color: #666;
+    margin: 0 0 4px 0;
+  }
+
+  .cardValue {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0 0 4px 0;
+
+    @media (max-width: 768px) {
+      font-size: 20px;
+    }
+  }
+
+  .cardNote {
+    font-size: 12px;
+    color: #ff9800;
+    margin: 0;
+  }
+}
+
+// Main Content
+.mainContent {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+.chartSection {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f0f0f0;
+
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
+
+.sectionTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
+}
+
+.chartTabs {
+  display: flex;
+  background: #f5f5f5;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.chartTab {
+  padding: 6px 16px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #666;
+
+  &.active {
+    background: #4285f4;
+    color: white;
+  }
+
+  &:hover:not(.active) {
+    background: #e0e0e0;
+  }
+}
+
+.chartPlaceholder {
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fafafa;
+  border-radius: 8px;
+  color: #999;
+  font-style: italic;
+
+  @media (max-width: 768px) {
+    height: 200px;
+  }
+}
+
+// Revenue Breakdown
+.revenueBreakdown {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f0f0f0;
+
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
+}
+
+.breakdownList {
+  margin-bottom: 20px;
+}
+
+.breakdownItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #f5f5f5;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.breakdownDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.breakdownCategory {
+  flex: 1;
+  font-size: 14px;
+  color: #333;
+}
+
+.breakdownAmount {
+  font-weight: 600;
+  font-size: 14px;
+  color: #1a1a1a;
+}
+
+.breakdownFooter {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid #f5f5f5;
+
+  p {
+    color: #999;
+    font-style: italic;
+    margin: 0;
+    font-size: 14px;
+  }
+}
+
+// Bottom Section
+.bottomSection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+.topSection {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f0f0f0;
+
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
+}
+
+.viewAllBtn {
+  background: none;
+  border: none;
+  color: #4285f4;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.topList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.topItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid #f5f5f5;
+  }
+}
+
+.topAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.topInfo {
+  flex: 1;
+  min-width: 0;
+
+  .topName {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1a1a1a;
+    margin: 0 0 4px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    @media (max-width: 768px) {
+      white-space: normal;
+      overflow: visible;
+      text-overflow: initial;
+    }
+  }
+
+  .topSubtext {
+    font-size: 12px;
+    color: #666;
+    margin: 0;
+  }
+}
+
+.topAmount {
+  font-weight: 600;
+  font-size: 14px;
+  color: #1a1a1a;
+  flex-shrink: 0;
+}
+
+// Mobile specific adjustments
+@media (max-width: 480px) {
+  .revenue {
+    padding: 12px;
+  }
+
+  .summaryCards {
+    gap: 12px;
+  }
+
+  .card {
+    padding: 16px;
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .cardContent .cardValue {
+    font-size: 18px;
+  }
+
+  .mainContent,
+  .bottomSection {
+    gap: 16px;
+  }
+
+  .chartSection,
+  .revenueBreakdown,
+  .topSection {
+    padding: 16px;
+  }
+
+  .topItem {
+    padding: 8px 0;
+  }
+
+  .topAvatar {
+    width: 36px;
+    height: 36px;
+    font-size: 12px;
+  }
+}

@@ -46,6 +46,7 @@ import AdminUserManagement from "./components/Admin/Content/UserManagement/UserM
 import AdminProductManagement from "./components/Admin/Content/ProductManagement/ProductManagement.jsx";
 import AdminSellerManagement from "./components/Admin/Content/SellerManagement/SellerManagement.jsx";
 import AdminSetting from "./components/Admin/Content/Setting/Setting.jsx";
+import AdminCategory from "./components/Admin/Content/Category/Category.jsx";
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
@@ -114,6 +115,7 @@ createRoot(document.getElementById("root")).render(
                 path="seller-management"
                 element={<AdminSellerManagement />}
               />
+              <Route path="category-management" element={<AdminCategory />} />
               <Route path="setting" element={<AdminSetting />} />
             </Route>
             <Route path="*" element={<NotFound />} />

@@ -1,0 +1,426 @@
+.category {
+  padding: 24px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+}
+
+.headerLeft {
+  .title {
+    font-size: 28px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0 0 8px 0;
+
+    @media (max-width: 768px) {
+      font-size: 24px;
+    }
+  }
+
+  .subtitle {
+    color: #666;
+    margin: 0;
+    font-size: 14px;
+  }
+}
+
+.addBtn {
+  padding: 10px 20px;
+  background: #4285f4;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background: #3367d6;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 12px;
+  }
+}
+
+.summaryCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 32px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+.summaryCard {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f0f0f0;
+
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
+}
+
+.cardIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.cardContent {
+  flex: 1;
+
+  .cardLabel {
+    font-size: 14px;
+    color: #666;
+    margin: 0 0 4px 0;
+  }
+
+  .cardValue {
+    font-size: 28px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0;
+
+    @media (max-width: 768px) {
+      font-size: 24px;
+    }
+  }
+}
+
+.filterSection {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 32px;
+  align-items: center;
+  justify-content: space-between;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+.searchBox {
+  position: relative;
+  flex: 1;
+  max-width: 400px;
+
+  @media (max-width: 768px) {
+    max-width: none;
+    width: 100%;
+  }
+}
+
+.searchIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+  font-size: 16px;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 10px 12px 10px 40px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  background: white;
+
+  &:focus {
+    outline: none;
+    border-color: #4285f4;
+  }
+
+  &::placeholder {
+    color: #999;
+  }
+}
+
+.filterControls {
+  display: flex;
+  gap: 12px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+.filterSelect,
+.sortSelect {
+  padding: 10px 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: white;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  min-width: 120px;
+
+  &:focus {
+    outline: none;
+    border-color: #4285f4;
+  }
+
+  @media (max-width: 768px) {
+    flex: 1;
+    min-width: unset;
+  }
+}
+
+.categoriesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin-bottom: 32px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+.categoryCard {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f0f0f0;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
+}
+
+.categoryHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.categoryIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.statusBadge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: white;
+  white-space: nowrap;
+}
+
+.categoryContent {
+  .categoryName {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0 0 8px 0;
+
+    @media (max-width: 768px) {
+      font-size: 16px;
+    }
+  }
+
+  .categoryDescription {
+    font-size: 14px;
+    color: #666;
+    margin: 0 0 16px 0;
+    line-height: 1.4;
+  }
+}
+
+.categoryStats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px solid #f5f5f5;
+}
+
+.productCount {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.categoryActions {
+  display: flex;
+  gap: 8px;
+}
+
+.editBtn,
+.trendBtn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  background: #f5f5f5;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background: #e0e0e0;
+  }
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 32px;
+
+  @media (max-width: 768px) {
+    margin-top: 24px;
+  }
+}
+
+.paginationBtn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #e0e0e0;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #333;
+  transition: all 0.2s;
+
+  &:hover:not(:disabled) {
+    background: #f5f5f5;
+  }
+
+  &.active {
+    background: #4285f4;
+    border-color: #4285f4;
+    color: white;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 768px) {
+    width: 36px;
+    height: 36px;
+    font-size: 12px;
+  }
+}
+
+// Mobile specific adjustments
+@media (max-width: 480px) {
+  .category {
+    padding: 12px;
+  }
+
+  .summaryCards {
+    gap: 12px;
+  }
+
+  .summaryCard {
+    padding: 16px;
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .cardContent .cardValue {
+    font-size: 20px;
+  }
+
+  .filterSection {
+    gap: 12px;
+  }
+
+  .categoriesGrid {
+    gap: 12px;
+  }
+
+  .categoryCard {
+    padding: 14px;
+
+    .categoryIcon {
+      width: 40px;
+      height: 40px;
+      font-size: 16px;
+    }
+
+    .categoryName {
+      font-size: 16px;
+    }
+
+    .categoryDescription {
+      font-size: 13px;
+    }
+  }
+
+  .categoryActions {
+    .editBtn,
+    .trendBtn {
+      width: 28px;
+      height: 28px;
+      font-size: 12px;
+    }
+  }
+}

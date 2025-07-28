@@ -49,6 +49,12 @@ const Layout = () => {
       path: "/admin/products-management",
     },
     {
+      id: "category",
+      label: "Danh Mục",
+      icon: Package,
+      path: "/admin/category-management",
+    },
+    {
       id: "orders",
       label: "Đơn Hàng",
       icon: ShoppingCart,

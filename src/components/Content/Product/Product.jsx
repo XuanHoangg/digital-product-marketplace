@@ -24,10 +24,19 @@ const Product = () => {
   const [products, setProducts] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [pageNumber, setPageNumber] = useState(1);
-  const [selectedCategories, setSelectedCategories] = useState([""]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedRating, setSelectedRating] = useState(0);
   const fetchData = async () => {
+    let text = null;
     try {
+      console.log("Fetching products with params:", {
+        Text: text,
+        selectedCategories,
+        selectedRating,
+        PAGE_SIZE,
+        pageNumber,
+      });
+
       const res = await getProducts(
         null,
         selectedCategories,
@@ -51,7 +60,7 @@ const Product = () => {
   };
   useEffect(() => {
     fetchData();
-  }, [pageNumber]);
+  }, [pageNumber, selectedCategories, selectedRating]);
 
   return (
     <div className={styles.product__container}>
