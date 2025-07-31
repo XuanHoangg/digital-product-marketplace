@@ -197,6 +197,8 @@ $shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
     @include flex-center;
     border: 2px dashed $border-color;
     border-radius: 8px;
+    width: 100%;
+    overflow: hidden;
   }
 
   &__placeholder {

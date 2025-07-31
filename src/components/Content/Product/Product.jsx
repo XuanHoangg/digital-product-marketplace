@@ -3,29 +3,34 @@ import styles from "./Product.module.scss";
 import CategoryFilter from "./ProductFilters/CategoryFilter";
 import RatingFilter from "./ProductFilters/RatingFilter";
 import ProductChild from "./ProductChild/ProductChild";
-import { getProducts } from "@service/user/store";
+import { getProducts, getCategory } from "@service/user/store";
 
 const PAGE_SIZE = 9;
 
-// Category và rating cứng, sẽ dùng để hiển thị nhưng chưa filter API
-const STATIC_CATEGORIES = [
-  { id: "", name: "Tất cả sản phẩm" },
-  { id: "template", name: "Giao diện & Template" },
-  { id: "plugin", name: "Plugin" },
-  { id: "software", name: "Phần mềm" },
-  { id: "graphic", name: "Tài nguyên đồ họa" },
-  { id: "course", name: "Khóa học" },
-  { id: "ebook", name: "Sách PDF" },
-  { id: "code", name: "Source code" },
-];
 const STATIC_RATINGS = [0, 1, 2, 3, 4, 5];
 
 const Product = () => {
+  const [categories, setCategories] = useState([
+    { id: "", name: "Tất cả sản phẩm" },
+  ]);
   const [products, setProducts] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [pageNumber, setPageNumber] = useState(1);
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  // Mặc định chọn "Tất cả sản phẩm" (id = "")
+  const [selectedCategories, setSelectedCategories] = useState([""]);
+  // Mặc định rating là 5 sao
   const [selectedRating, setSelectedRating] = useState(0);
+  const fetchDataCategory = async () => {
+    const res = await getCategory();
+    // res.data là mảng { categoryId, categoryName, categoriesCount }
+    const mapped = (res.data || []).map((item) => ({
+      id: item.categoryId,
+      name: item.categoryName,
+    }));
+    setCategories([{ id: "", name: "Tất cả sản phẩm" }, ...mapped]);
+    // console.log("Fetched categories:", mapped);
+  };
+
   const fetchData = async () => {
     let text = null;
     try {
@@ -39,8 +44,8 @@ const Product = () => {
 
       const res = await getProducts(
         null,
-        selectedCategories,
         selectedRating,
+        selectedCategories,
         PAGE_SIZE,
         pageNumber
       );
@@ -54,12 +59,15 @@ const Product = () => {
       console.error("Fetch products error", err);
     }
   };
+
   const handleSelectCategories = (updated) => {
     // console.log("Đã chọn categories:", updated);
     setSelectedCategories(updated);
   };
+
   useEffect(() => {
     fetchData();
+    fetchDataCategory();
   }, [pageNumber, selectedCategories, selectedRating]);
 
   return (
@@ -72,7 +80,7 @@ const Product = () => {
       <div className={styles.product}>
         <aside className={styles.product__filters}>
           <CategoryFilter
-            categories={STATIC_CATEGORIES}
+            categories={categories}
             selected={selectedCategories}
             onSelect={handleSelectCategories}
           />

@@ -1,22 +1,21 @@
 import axios from "./../../utils/axiosCustom";
 const getProducts = async (
-  Text,
+  Text = null,
+  RatingOverall = 0,
   CategoryIds = [],
-  RatingOverall,
   PageSize = 15,
   PageNumber = 1
 ) => {
-  return await axios.get("api/Buyer/product-index", {
+  return await axios.get("/api/Buyer/product-index", {
     params: {
       "Condition.Text": Text,
-      "Condition.CategoryIds": CategoryIds,
       "Condition.RatingOverall": RatingOverall,
+      ...(CategoryIds.length > 0 && {
+        "Condition.CategoryIds": CategoryIds,
+      }),
+
       PageSize,
       PageNumber,
-    },
-    paramsSerializer: (params) => {
-      // Serialize array to multiple entries, e.g. CategoryIds=1&CategoryIds=2
-      return new URLSearchParams(params).toString();
     },
   });
 };
@@ -25,4 +24,7 @@ const getDetailProduct = async (ProjectId) => {
     params: { ProjectId },
   });
 };
-export { getProducts, getDetailProduct };
+const getCategory = () => {
+  return axios.get("/api/Buyer/get-categories");
+};
+export { getProducts, getDetailProduct, getCategory };

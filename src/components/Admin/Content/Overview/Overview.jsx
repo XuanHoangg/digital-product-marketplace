@@ -1,51 +1,185 @@
 import React, { useState } from "react";
 import styles from "./Overview.module.scss";
-
+import {
+  getOverview,
+  getOverviewRecentActivity,
+  getOverviewTopStores,
+  getOverviewUserActivity,
+  getOverviewDaySales,
+  getOverviewMonthlySales,
+} from "@service/admin/adminOverviewAPI";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 const Overview = () => {
+  const userId = useSelector((state) => state?.auth?.account?.userId);
+  // state của các thông tin tổng quan
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [totalSellers, setTotalSellers] = useState(0);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [monthlyRevenue, setMonthlyRevenue] = useState(0);
+  // state của hoạt động gần đây
+  const [activityData, setActivityData] = useState([]);
+  const [visibleCount, setVisibleCount] = useState(5);
+  // state của hoạt động người dùng
+  const [activeUser, setActiveUser] = useState(0);
+  const [newRegister, setNewRegister] = useState(0);
+  const [todayOrder, setTodayOrder] = useState(0);
+  const [todayRevenue, setTodayRevenue] = useState(0);
+  // state của charts
   const [selectedPeriod, setSelectedPeriod] = useState("Tuần");
+  const [chartdata, setChartData] = useState([]);
+  useEffect(() => {
+    fetchData();
+    if (selectedPeriod === "Tuần") {
+      fetchDaySales();
+    } else if (selectedPeriod === "Tháng") {
+      fetchMonthlySales();
+    } else {
+      fakeYearlySales(); // chưa có API
+    }
+  }, [selectedPeriod]);
+  const fetchData = async () => {
+    try {
+      // Lấy dữ liệu tổng quan
+      fetchDataOvewrview();
+      // Lấy dữ liệu hoạt động gần đây
+      fetchDataRecentActivity();
+      // Lấy dữ liệu cửa hàng hàng đầu
+      const topStoresResponse = await getOverviewTopStores(userId);
+      // Lấy dữ liệu hoạt động người dùng,
+      fetchDataUserActivity();
+      // Lấy dữ liệu doanh thu theo ngày
+      // fetchDaySales();
+      // Lấy dữ liệu doanh thu theo tháng
+      // fetchMonthlySales();
+      // const userActivityResponse = await getOverviewUserActivity(userId);
+      // const daySalesResponse = await getOverviewDaySales(userId);
+      // const monthlySalesResponse = await getOverviewMonthlySales(userId);
+      // console.log("Recent Activity:", recentActivityResponse);
+      // console.log("Top Stores:", topStoresResponse);
+      // console.log("User Activity:", userActivityResponse);
+      // console.log("Day Sales:", daySalesResponse);
+      // console.log("Monthly Sales:", monthlySalesResponse);
+    } catch (error) {
+      console.error("Lỗi lấy dữ liệu tổng quan:", error);
+    }
+  };
+  const fetchDataOvewrview = async () => {
+    try {
+      const response = await getOverview(userId);
+      const data = response.data;
+      setTotalUsers(data[0].value);
+      setTotalSellers(data[1].value);
+      setTotalProducts(data[2].value);
+      setMonthlyRevenue(data[3].value);
+    } catch (error) {
+      console.error("Lỗi lấy dữ liệu tổng quan:", error);
+    }
+  };
+  const fetchDataRecentActivity = async () => {
+    try {
+      const res = await getOverviewRecentActivity(userId);
+      const rawData = res.data;
+      const formatted = rawData.map((item, index) => ({
+        id: index,
+        title: item.name,
+        subtitle: item.description || "Không có mô tả",
+        time: new Date(item.createAt).toLocaleString("vi-VN"),
+        type: item.name,
+      }));
+      setActivityData(formatted);
+    } catch (error) {
+      console.error("Lỗi lấy dữ liệu hoạt động gần đây:", error);
+    }
+  };
+  const fetchDataUserActivity = async () => {
+    try {
+      const response = await getOverviewUserActivity(userId);
+      const activities = response?.data?.userActivities || [];
 
-  // Mock data - sẽ thay thế bằng API call sau
-  const statsData = {
-    totalUsers: 125847,
-    totalSellers: 3254,
-    totalProducts: 89632,
-    monthlyRevenue: "2.8 tỷ đ",
+      activities.forEach((item) => {
+        switch (item.name) {
+          case "Người dùng đang hoạt động":
+            setActiveUser(item.value);
+            break;
+          case "Đăng ký mới":
+            setNewRegister(item.value);
+            break;
+          case "Đơn hàng hôm nay":
+            setTodayOrder(item.value);
+            break;
+          case "Doanh thu hôm nay":
+            setTodayRevenue(item.value);
+            break;
+          default:
+            break;
+        }
+      });
+    } catch (err) {
+      console.error("Lỗi khi fetch hoạt động người dùng:", err);
+    }
+  };
+  const fetchDaySales = async () => {
+    try {
+      const res = await getOverviewDaySales(userId);
+      const nodes = res?.data?.nodes || [];
+      console.log("Doanh thu theo ngày:", nodes);
+      setChartData(nodes);
+    } catch (err) {
+      console.error("Lỗi fetch doanh thu theo ngày", err);
+    }
   };
 
-  const activityData = [
-    {
-      id: 1,
-      type: "new_user",
-      title: "Người dùng mới đăng ký",
-      subtitle: "Nguyễn Văn A đã tạo tài khoản",
-      time: "5 phút trước",
-      count: 45231,
-    },
-    {
-      id: 2,
-      type: "new_registration",
-      title: "Đơn hàng mới",
-      subtitle: "Đơn hàng #DH001 trị giá 1.250.000đ",
-      time: "12 phút trước",
-      count: 1847,
-    },
-    {
-      id: 3,
-      type: "new_product",
-      title: "Sản phẩm mới",
-      subtitle: 'Shop ABC đã thêm "UI Kit Pro"',
-      time: "25 phút trước",
-      count: 892,
-    },
-    {
-      id: 4,
-      type: "new_review",
-      title: "Đánh giá mới",
-      subtitle: "Khách hàng đánh giá 5 sao cho sản phẩm",
-      time: "1 giờ trước",
-      count: "125M đ",
-    },
-  ];
+  const fetchMonthlySales = async () => {
+    try {
+      const res = await getOverviewMonthlySales(userId);
+      const nodes = res?.data?.nodes || [];
+      const monthMap = {
+        1: "Thg 1",
+        2: "Thg 2",
+        3: "Thg 3",
+        4: "Thg 4",
+        5: "Thg 5",
+        6: "Thg 6",
+        7: "Thg 7",
+        8: "Thg 8",
+        9: "Thg 9",
+        10: "Thg 10",
+        11: "Thg 11",
+        12: "Thg 12",
+      };
+      const formatted = nodes.map((item) => ({
+        name: monthMap[item.name] || `Thg ${item.name}`,
+        value: item.value,
+      }));
+      setChartData(formatted);
+    } catch (err) {
+      console.error("Lỗi fetch doanh thu theo tháng", err);
+    }
+  };
+
+  const fakeYearlySales = () => {
+    const fake = [
+      { name: "2020", value: 1500 },
+      { name: "2021", value: 3200 },
+      { name: "2022", value: 2700 },
+      { name: "2023", value: 4000 },
+      { name: "2024", value: 3600 },
+    ];
+    setChartData(fake);
+  };
+  const handleLoadMore = () => {
+    setVisibleCount((prev) => prev + 10);
+  };
 
   const topSellersData = [
     {
@@ -83,10 +217,26 @@ const Overview = () => {
   ];
 
   const userActivityData = [
-    { label: "Người dùng hoạt động", value: 45231, color: "green" },
-    { label: "Đăng ký mới", value: 1847, color: "blue" },
-    { label: "Đơn hàng hôm nay", value: 892, color: "orange" },
-    { label: "Doanh thu hôm nay", value: "125M đ", color: "purple" },
+    {
+      label: "Người dùng đang hoạt động",
+      value: activeUser,
+      color: "green",
+    },
+    {
+      label: "Đăng ký mới",
+      value: newRegister,
+      color: "blue",
+    },
+    {
+      label: "Đơn hàng hôm nay",
+      value: todayOrder,
+      color: "orange",
+    },
+    {
+      label: "Doanh thu hôm nay",
+      value: todayRevenue,
+      color: "red",
+    },
   ];
 
   const getIconByType = (type) => {
@@ -96,7 +246,7 @@ const Overview = () => {
       new_product: "📦",
       new_review: "⭐",
     };
-    return icons[type] || "📊";
+    return icons[type] || "⭐";
   };
 
   const getColorByType = (color) => {
@@ -122,9 +272,7 @@ const Overview = () => {
           </div>
           <div className={styles.stats__content}>
             <h3 className={styles.stats__label}>Tổng Người Dùng</h3>
-            <p className={styles.stats__value}>
-              {statsData.totalUsers.toLocaleString()}
-            </p>
+            <p className={styles.stats__value}>{totalUsers}</p>
           </div>
         </div>
 
@@ -136,9 +284,7 @@ const Overview = () => {
           </div>
           <div className={styles.stats__content}>
             <h3 className={styles.stats__label}>Số Người Bán</h3>
-            <p className={styles.stats__value}>
-              {statsData.totalSellers.toLocaleString()}
-            </p>
+            <p className={styles.stats__value}>{totalSellers}</p>
           </div>
         </div>
 
@@ -150,9 +296,7 @@ const Overview = () => {
           </div>
           <div className={styles.stats__content}>
             <h3 className={styles.stats__label}>Số Sản Phẩm</h3>
-            <p className={styles.stats__value}>
-              {statsData.totalProducts.toLocaleString()}
-            </p>
+            <p className={styles.stats__value}>{totalProducts}</p>
           </div>
         </div>
 
@@ -164,7 +308,8 @@ const Overview = () => {
           </div>
           <div className={styles.stats__content}>
             <h3 className={styles.stats__label}>Doanh Thu Tháng</h3>
-            <p className={styles.stats__value}>{statsData.monthlyRevenue}</p>
+
+            <p className={styles.stats__value}>{monthlyRevenue}</p>
           </div>
         </div>
       </div>
@@ -192,10 +337,30 @@ const Overview = () => {
                 ))}
               </div>
             </div>
+
             <div className={styles.chart__content}>
-              <p className={styles.chart__placeholder}>
-                Biểu đồ doanh thu theo thời gian
-              </p>
+              {selectedPeriod === "Năm" ? (
+                <p className={styles.chart__placeholder}>
+                  Chức năng đang được phát triển
+                </p>
+              ) : chartdata.length > 0 ? (
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart
+                    data={chartdata}
+                    margin={{ top: 20, right: 30, left: 10, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="value" fill="#3B82F6" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <p className={styles.chart__placeholder}>
+                  Không có dữ liệu doanh thu
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -239,12 +404,17 @@ const Overview = () => {
               <h2 className={styles.recentActivity__title}>
                 Hoạt Động Gần Đây
               </h2>
-              <button className={styles.recentActivity__viewAll}>
-                Xem tất cả
-              </button>
+              {activityData.length > visibleCount && (
+                <button
+                  className={styles.recentActivity__viewAll}
+                  onClick={handleLoadMore}
+                >
+                  Xem tiếp
+                </button>
+              )}
             </div>
             <div className={styles.recentActivity__list}>
-              {activityData.map((activity) => (
+              {activityData.slice(0, visibleCount).map((activity) => (
                 <div key={activity.id} className={styles.recentActivity__item}>
                   <div className={styles.recentActivity__icon}>
                     <span>{getIconByType(activity.type)}</span>

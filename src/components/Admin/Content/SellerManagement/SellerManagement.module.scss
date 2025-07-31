@@ -417,6 +417,14 @@ $shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
       background: rgba($text-muted, 0.1);
       color: $text-muted;
     }
+    &--suspended {
+      background: rgba($warning-color, 0.1);
+      color: $warning-color;
+    }
+    &--deleted {
+      background: rgba($purple-color, 0.1);
+      color: $purple-color;
+    }
   }
 
   &__actions {

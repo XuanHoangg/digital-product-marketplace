@@ -1,12 +1,78 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./UserManagement.module.scss";
-
+import { getUserList, putUpdateUser } from "@service/admin/adminManagement";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 const UserManagement = () => {
+  const userId = useSelector((state) => state?.auth?.account?.userId);
+  const [selectedUserToBan, setSelectedUserToBan] = useState(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("Tất cả");
   const [currentPage, setCurrentPage] = useState(1);
+  const [users, setUsers] = useState([]);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const count = 5;
 
-  // Mock data - replace with API call later
+  useEffect(() => {
+    fetchData();
+  }, [userId, searchTerm, statusFilter, currentPage]);
+
+  const fetchData = async () => {
+    try {
+      const filterStatus =
+        statusFilter === "Tất cả"
+          ? null
+          : statusFilter === "Hoạt động"
+          ? true
+          : false;
+      const response = await getUserList(
+        userId,
+        searchTerm,
+        filterStatus,
+        count,
+        currentPage
+      );
+
+      const usersFromAPI = response.data?.users || [];
+      const totalFromAPI = response.data?.total || 0;
+
+      const mapped = usersFromAPI.map((item) => ({
+        id: item.id,
+        name: item.name,
+        email: item.email || "chưa có email",
+        joinDate: new Date(item.joinAt).toLocaleDateString("vi-VN"),
+        orders: item.countOrder || 0,
+        totalSpent: item.expenditure?.toLocaleString("vi-VN") + " đ" || "0 đ",
+        status: item.status,
+        avatar: item.name
+          ?.split(" ")
+          .slice(-2)
+          .map((s) => s[0])
+          .join(""),
+      }));
+
+      setUsers(mapped);
+      setTotalUsers(totalFromAPI);
+    } catch (error) {
+      console.error("Error fetching user list:", error);
+    }
+  };
+  const handleConfirmBan = async () => {
+    if (!selectedUserToBan) return;
+
+    try {
+      await putUpdateUser(userId, selectedUserToBan);
+      toast.success("Đã khóa người dùng!");
+      fetchData();
+    } catch (error) {
+      toast.error("Khóa người dùng thất bại!");
+      console.error("Error banning user:", error);
+    } finally {
+      setShowConfirmModal(false);
+      setSelectedUserToBan(null);
+    }
+  };
   const stats = [
     {
       title: "Tổng Người Dùng",
@@ -32,49 +98,6 @@ const UserManagement = () => {
       count: "234",
       icon: "🚫",
       color: "red",
-    },
-  ];
-
-  const users = [
-    {
-      id: "ND001",
-      name: "Nguyễn Văn A",
-      email: "nguyenvana@email.com",
-      joinDate: "15/03/2024",
-      orders: 24,
-      totalSpent: "15.750.000 đ",
-      status: "Hoạt động",
-      avatar: "NV",
-    },
-    {
-      id: "ND002",
-      name: "Trần Thị B",
-      email: "tranthib@email.com",
-      joinDate: "20/03/2024",
-      orders: 18,
-      totalSpent: "12.300.000 đ",
-      status: "Hoạt động",
-      avatar: "TT",
-    },
-    {
-      id: "ND003",
-      name: "Lê Minh C",
-      email: "leminhc@email.com",
-      joinDate: "25/03/2024",
-      orders: 8,
-      totalSpent: "5.200.000 đ",
-      status: "Hoạt động",
-      avatar: "LM",
-    },
-    {
-      id: "ND004",
-      name: "Phạm Thị D",
-      email: "phamthid@email.com",
-      joinDate: "28/03/2024",
-      orders: 0,
-      totalSpent: "0 đ",
-      status: "Bị chặn",
-      avatar: "PT",
     },
   ];
 
@@ -136,64 +159,74 @@ const UserManagement = () => {
               <option value="Hoạt động">Hoạt động</option>
               <option value="Bị chặn">Bị chặn</option>
             </select>
-            <select className={styles.filterSelect}>
-              <option value="all">Trạng thái</option>
-            </select>
           </div>
         </div>
 
         <div className={styles.tableWrapper}>
+          <p style={{ textAlign: "center", marginBottom: "16px" }}>
+            Hiển thị {users.length} người dùng trên tổng {totalUsers} người dùng
+          </p>
           <table className={styles.table}>
-            <thead className={styles.tableHead}>
+            <thead className={styles.tableRow}>
               <tr>
-                <th className={styles.tableHeaderCell}>NGƯỜI DÙNG</th>
-                <th className={styles.tableHeaderCell}>EMAIL</th>
-                <th className={styles.tableHeaderCell}>NGÀY THAM GIA</th>
-                <th className={styles.tableHeaderCell}>ĐƠN HÀNG</th>
-                <th className={styles.tableHeaderCell}>CHI TIÊU</th>
-                <th className={styles.tableHeaderCell}>TRẠNG THÁI</th>
-                <th className={styles.tableHeaderCell}>THAO TÁC</th>
+                <th style={{ paddingLeft: "24px" }}>NGƯỜI DÙNG</th>
+
+                <th style={{ paddingLeft: "24px" }}>NGÀY THAM GIA</th>
+                <th style={{ paddingLeft: "24px" }}>ĐƠN HÀNG</th>
+                <th style={{ paddingLeft: "24px" }}>CHI TIÊU</th>
+                <th style={{ paddingLeft: "24px" }}>TRẠNG THÁI</th>
+                <th style={{ paddingLeft: "24px" }}>THAO TÁC</th>
               </tr>
             </thead>
             <tbody className={styles.tableBody}>
-              {users.map((user) => (
-                <tr key={user.id} className={styles.tableRow}>
-                  <td className={styles.tableCell}>
-                    <div className={styles.userInfo}>
-                      <div className={styles.avatar}>{user.avatar}</div>
-                      <div className={styles.userDetails}>
-                        <div className={styles.userName}>{user.name}</div>
-                        <div className={styles.userId}>ID: #{user.id}</div>
+              {users.length > 0 ? (
+                users.map((user) => (
+                  <tr key={user.id} className={styles.tableRow}>
+                    <td className={styles.tableCell}>
+                      <div className={styles.userInfo}>
+                        <div className={styles.avatar}>{user.avatar}</div>
+                        <div className={styles.userDetails}>
+                          <div className={styles.userName}>{user.name}</div>
+                          <div className={styles.userId}>ID: #{user.id}</div>
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td className={styles.tableCell}>{user.email}</td>
-                  <td className={styles.tableCell}>{user.joinDate}</td>
-                  <td className={styles.tableCell}>{user.orders}</td>
-                  <td className={styles.tableCell}>{user.totalSpent}</td>
-                  <td className={styles.tableCell}>
-                    <span className={getStatusBadgeClass(user.status)}>
-                      {user.status}
-                    </span>
-                  </td>
-                  <td className={styles.tableCell}>
-                    <div className={styles.actions}>
-                      <button
-                        className={styles.actionButton}
-                        title="Xem chi tiết"
-                      >
-                        👁️
-                      </button>
-                      <button className={styles.actionButton} title="Chỉnh sửa">
-                        ✏️
-                      </button>
-                      <button className={styles.actionButton} title="Xóa">
-                        🗑️
-                      </button>
-                    </div>
+                    </td>
+
+                    <td className={styles.tableCell}>{user.joinDate}</td>
+                    <td className={styles.tableCell}>{user.orders}</td>
+                    <td className={styles.tableCell}>{user.totalSpent}</td>
+                    <td className={styles.tableCell}>
+                      <span className={getStatusBadgeClass(user.status)}>
+                        {user.status}
+                      </span>
+                    </td>
+                    <td className={styles.tableCell}>
+                      <div className={styles.actions}>
+                        <button
+                          className={styles.actionButton}
+                          title="Khóa người dùng"
+                          onClick={() => {
+                            setSelectedUserToBan(user.id);
+                            setShowConfirmModal(true);
+                          }}
+                        >
+                          🔒
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan={6}
+                    className={styles.tableCell}
+                    style={{ textAlign: "center" }}
+                  >
+                    Không tìm thấy người dùng với “{searchTerm}”
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
@@ -201,26 +234,64 @@ const UserManagement = () => {
         <div className={styles.pagination}>
           <button
             className={styles.paginationButton}
-            onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+            onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
             disabled={currentPage === 1}
           >
             ‹
           </button>
-          <button
-            className={`${styles.paginationButton} ${styles.paginationButtonActive}`}
-          >
-            1
-          </button>
-          <button className={styles.paginationButton}>2</button>
-          <button className={styles.paginationButton}>3</button>
+
+          {Array.from({ length: Math.ceil(totalUsers / count) }, (_, i) => (
+            <button
+              key={i + 1}
+              className={`${styles.paginationButton} ${
+                currentPage === i + 1 ? styles.paginationButtonActive : ""
+              }`}
+              onClick={() => setCurrentPage(i + 1)}
+            >
+              {i + 1}
+            </button>
+          ))}
+
           <button
             className={styles.paginationButton}
-            onClick={() => setCurrentPage(currentPage + 1)}
+            onClick={() =>
+              setCurrentPage((prev) =>
+                Math.min(Math.ceil(totalUsers / count), prev + 1)
+              )
+            }
+            disabled={currentPage === Math.ceil(totalUsers / count)}
           >
             ›
           </button>
         </div>
       </div>
+      {showConfirmModal && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <h3>Xác nhận khóa người dùng</h3>
+            <p>
+              Bạn có chắc muốn khóa người dùng có ID #{selectedUserToBan} không?
+            </p>
+            <div className={styles.modalActions}>
+              <button
+                className={styles.confirmButton}
+                onClick={handleConfirmBan}
+              >
+                Xác nhận
+              </button>
+              <button
+                className={styles.cancelButton}
+                onClick={() => {
+                  setShowConfirmModal(false);
+                  setSelectedUserToBan(null);
+                }}
+              >
+                Hủy
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
