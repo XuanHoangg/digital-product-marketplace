@@ -6,6 +6,8 @@
       "@components/*": ["components/*"],
         "@utils/*": ["utils/*"],
     //   "@pages/*": ["pages/*"]
+      "@redux/*": ["redux/*"],
+      "@layouts/*": ["layouts/*"]
     }
   },
   "include": ["src"]

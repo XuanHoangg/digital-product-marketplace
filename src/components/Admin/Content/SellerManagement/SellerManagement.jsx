@@ -3,6 +3,8 @@ import styles from "./SellerManagement.module.scss";
 import { getSellerList } from "@service/admin/adminManagement";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import ModalUpdateSeller from "./ModalUpdateSeller/ModalUpdateSeller";
+import { getSellerOverview } from "@service/admin/adminOverviewAPI";
 const SellerManagement = () => {
   const [stateFilter, setStateFilter] = useState("Trạng thái");
 
@@ -16,10 +18,42 @@ const SellerManagement = () => {
 
   const [totalSellers, setTotalSellers] = useState(0);
   const [pageSize, setPageSize] = useState(10);
+  const [selectedSeller, setSelectedSeller] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const [statsData, setStatsData] = useState({
+    totalSellers: 0,
+    activeSellers: 0,
+    newSellers: 0,
+    blockedSellers: 0,
+  });
   useEffect(() => {
     fetchData();
-  }, [currentPage, statusFilter, searchTerm]);
+    fetchOverview();
+  }, [currentPage, statusFilter, searchTerm, userId]);
+  const fetchOverview = async () => {
+    try {
+      const res = await getSellerOverview(userId);
+      console.log("Seller Overview Data:", res.data);
+
+      const data = res.data?.indexs || [];
+
+      const mapped = {
+        totalSellers: data.find((i) => i.name === "Tổng người bán")?.value ?? 0,
+        activeSellers:
+          data.find((i) => i.name === "Người bán hoạt động")?.value ?? 0,
+        newSellers: data.find((i) => i.name === "Người bán mới")?.value ?? 0,
+        blockedSellers:
+          data.find((i) => i.name === "Người bán bị chặn")?.value ?? 0,
+      };
+
+      console.log("✅ Stats Data:", mapped);
+      setStatsData(mapped);
+    } catch (err) {
+      console.error("❌ Lỗi khi load thống kê người bán:", err);
+    }
+  };
+
   const fetchData = async () => {
     try {
       const filterStatus =
@@ -40,7 +74,7 @@ const SellerManagement = () => {
       );
 
       const stores = response?.data?.storeIndices || [];
-      console.log("Stores:", response);
+      // console.log("Stores:", response);
       const mappedSellers = stores.map((store) => {
         const statusText = store.status;
         let status = "unknown";
@@ -73,59 +107,50 @@ const SellerManagement = () => {
     }
   };
 
-  const statsData = {
-    totalSellers: 3254,
-    activeSellers: 2847,
-    newSellers: 1847,
-    blockedSellers: 234,
-  };
-
-  const sellersData = [
-    {
-      id: "SH001",
-      name: "DigitalMarket Store",
-      owner: "Nguyễn Văn A",
-      products: 156,
-      revenue: "850M đ",
-      rating: 4.8,
-      status: "active",
-      avatar: "DM",
-    },
-    {
-      id: "SH002",
-      name: "TechShop Vietnam",
-      owner: "Trần Thị B",
-      products: 89,
-      revenue: "720M đ",
-      rating: 4.6,
-      status: "active",
-      avatar: "TS",
-    },
-    {
-      id: "SH003",
-      name: "Creative Studio",
-      owner: "Lê Minh C",
-      products: 234,
-      revenue: "680M đ",
-      rating: 4.9,
-      status: "blocked",
-      avatar: "CS",
-    },
-    {
-      id: "SH004",
-      name: "EduTech Solutions",
-      owner: "Phạm Thị D",
-      products: 67,
-      revenue: "520M đ",
-      rating: 4.7,
-      status: "active",
-      avatar: "ED",
-    },
-  ];
+  //   {
+  //     id: "SH001",
+  //     name: "DigitalMarket Store",
+  //     owner: "Nguyễn Văn A",
+  //     products: 156,
+  //     revenue: "850M đ",
+  //     rating: 4.8,
+  //     status: "active",
+  //     avatar: "DM",
+  //   },
+  //   {
+  //     id: "SH002",
+  //     name: "TechShop Vietnam",
+  //     owner: "Trần Thị B",
+  //     products: 89,
+  //     revenue: "720M đ",
+  //     rating: 4.6,
+  //     status: "active",
+  //     avatar: "TS",
+  //   },
+  //   {
+  //     id: "SH003",
+  //     name: "Creative Studio",
+  //     owner: "Lê Minh C",
+  //     products: 234,
+  //     revenue: "680M đ",
+  //     rating: 4.9,
+  //     status: "blocked",
+  //     avatar: "CS",
+  //   },
+  //   {
+  //     id: "SH004",
+  //     name: "EduTech Solutions",
+  //     owner: "Phạm Thị D",
+  //     products: 67,
+  //     revenue: "520M đ",
+  //     rating: 4.7,
+  //     status: "active",
+  //     avatar: "ED",
+  //   },
+  // ];
 
   const statusOptions = ["Tất cả", "Hoạt động", "Tạm ngưng", "Đã xóa"];
 
-  // const stateOptions = ["Trạng thái", "Hoạt động", "Bị chán"];
   const getStatusBadge = (status) => {
     switch (status) {
       case "active":
@@ -173,6 +198,18 @@ const SellerManagement = () => {
   );
   const totalPages = Math.ceil(totalSellers / pageSize);
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+  const handleOpenModal = (seller) => {
+    setSelectedSeller(seller);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = (shouldReload) => {
+    setIsModalOpen(false);
+    setSelectedSeller(null);
+    if (shouldReload) {
+      fetchData(); // gọi lại API nếu bạn có hàm này
+    }
+  };
   return (
     <div className={styles.userManagement}>
       <div className={styles.userManagement__header}>
@@ -182,10 +219,6 @@ const SellerManagement = () => {
             Quản lý shop và hoạt động kinh doanh
           </p>
         </div>
-        <button className={styles.userManagement__addButton}>
-          <span className={styles.userManagement__addIcon}>+</span>
-          Thêm người bán
-        </button>
       </div>
 
       {/* Stats Cards */}
@@ -354,21 +387,10 @@ const SellerManagement = () => {
                     <div className={styles.table__actions}>
                       <button
                         className={styles.table__actionButton}
-                        title="Xem chi tiết"
+                        title="Cài đặt"
+                        onClick={() => handleOpenModal(seller)}
                       >
-                        👁️
-                      </button>
-                      <button
-                        className={styles.table__actionButton}
-                        title="Chỉnh sửa"
-                      >
-                        ✏️
-                      </button>
-                      <button
-                        className={styles.table__actionButton}
-                        title="Xóa"
-                      >
-                        🗑️
+                        ⚙️
                       </button>
                     </div>
                   </td>
@@ -409,6 +431,11 @@ const SellerManagement = () => {
           ›
         </button>
       </div>
+      <ModalUpdateSeller
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        seller={selectedSeller}
+      />
     </div>
   );
 };

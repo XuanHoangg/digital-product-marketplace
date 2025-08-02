@@ -1,33 +1,58 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./ProductManagement.module.scss";
-
+import { useSelector } from "react-redux";
+import { getOverviewProduct } from "@service/admin/adminProduct";
 const ProductManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("Danh mục");
   const [statusFilter, setStatusFilter] = useState("Trạng thái");
   const [currentPage, setCurrentPage] = useState(1);
+  const [stats, setStats] = useState([]);
+  const userId = useSelector((state) => state?.auth?.account?.userId);
 
-  // Mock data - replace with API call later
-  const stats = [
-    {
-      title: "Tổng Sản Phẩm",
-      count: "89.632",
-      icon: "📦",
-      color: "orange",
-    },
-    {
-      title: "Sản Phẩm Hoạt Động",
-      count: "78.456",
-      icon: "✅",
-      color: "green",
-    },
-    {
-      title: "Chờ Duyệt",
-      count: "2.847",
-      icon: "⏳",
-      color: "orange",
-    },
-  ];
+  useEffect(() => {
+    fetchOverview();
+  }, [userId]);
+  const fetchOverview = async () => {
+    try {
+      const response = await getOverviewProduct(userId);
+      const data = response?.data?.indexDtos || [];
+
+      const mappedStats = data.map((item) => {
+        let color = "";
+        let icon = "";
+
+        switch (item.name) {
+          case "Tổng sản phẩm":
+            color = "blue";
+            icon = "📦";
+            break;
+          case "Sản phẩm hoạt động":
+            color = "green";
+            icon = "✅";
+            break;
+          case "Chờ duyệt":
+            color = "orange";
+            icon = "⏳";
+            break;
+          default:
+            color = "gray";
+            icon = "❔";
+        }
+
+        return {
+          title: item.name,
+          count: item.value,
+          color,
+          icon,
+        };
+      });
+
+      setStats(mappedStats);
+    } catch (error) {
+      console.error("Error fetching product overview:", error);
+    }
+  };
 
   const products = [
     {

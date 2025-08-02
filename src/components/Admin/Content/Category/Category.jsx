@@ -1,18 +1,55 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, use } from "react";
 import styles from "./Category.module.scss";
-
+import { useSelector } from "react-redux";
+import ModalAddCategory from "./ModalAddCategory/ModalAddCategory";
+import {
+  getProductCategories,
+  getCategoryOverview,
+} from "@service/admin/adminCategory";
 const Category = () => {
+  const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("Tất cả");
   const [sortBy, setSortBy] = useState("Sort");
   const [currentPage, setCurrentPage] = useState(1);
+  const userId = useSelector((state) => state?.auth?.account?.userId);
+  const [summaryData, setSummaryData] = useState({
+    totalCategories: 0,
+    activeCategories: 0,
+  });
 
-  // Mock data - sẽ thay thế bằng API call sau
-  const summaryData = {
-    totalCategories: 24,
-    activeCategories: 21,
+  useEffect(() => {
+    fetchProductCategories();
+    fetDataCategories();
+  }, []);
+  const fetchProductCategories = async () => {
+    try {
+      const response = await getProductCategories();
+      // console.log("Product Categories:", response);
+    } catch (error) {
+      console.error("Error fetching product categories:", error);
+    }
   };
+  const handleSuccess = () => {
+    fetDataCategories();
+    setShowModal(false);
+  };
+  const fetDataCategories = async () => {
+    try {
+      const response = await getCategoryOverview(userId);
+      const indexList = response?.data?.indexDtos || [];
+      // console.log("Index List:", indexList);
 
+      setSummaryData({
+        totalCategories: indexList[0]?.value || 0,
+        activeCategories: indexList[1]?.value || 0,
+      });
+
+      // console.log("Category Overview:", response);
+    } catch (error) {
+      console.error("Error fetching product categories:", error);
+    }
+  };
   const filterOptions = ["Tất cả", "Hoạt động", "Chờ duyệt", "Tạm dừng"];
   const sortOptions = [
     "Sort",
@@ -130,11 +167,13 @@ const Category = () => {
             Tổ chức và quản lý danh mục sản phẩm
           </p>
         </div>
-        <button className={styles.addBtn}>+ Thêm danh mục</button>
+        <button className={styles.addBtn} onClick={() => setShowModal(true)}>
+          + Thêm danh mục
+        </button>
       </div>
 
       {/* Summary Cards */}
-      <div className={styles.summaryCards}>
+      {/* <div className={styles.summaryCards}>
         <div className={styles.summaryCard}>
           <div
             className={styles.cardIcon}
@@ -160,8 +199,38 @@ const Category = () => {
             <h3 className={styles.cardValue}>{summaryData.activeCategories}</h3>
           </div>
         </div>
+      </div> */}
+      <div className={styles.summaryCards}>
+        {[
+          {
+            label: "Tổng Danh Mục",
+            value: summaryData.totalCategories,
+            bg: "#e3f2fd",
+            color: "#2196f3",
+            icon: "≡",
+          },
+          {
+            label: "Danh Mục Hoạt Động",
+            value: summaryData.activeCategories,
+            bg: "#e8f5e8",
+            color: "#4caf50",
+            icon: "✓",
+          },
+        ].map((item, index) => (
+          <div key={index} className={styles.summaryCard}>
+            <div
+              className={styles.cardIcon}
+              style={{ backgroundColor: item.bg }}
+            >
+              <span style={{ color: item.color }}>{item.icon}</span>
+            </div>
+            <div className={styles.cardContent}>
+              <p className={styles.cardLabel}>{item.label}</p>
+              <h3 className={styles.cardValue}>{item.value}</h3>
+            </div>
+          </div>
+        ))}
       </div>
-
       {/* Filter Section */}
       <div className={styles.filterSection}>
         <div className={styles.searchBox}>
@@ -272,6 +341,12 @@ const Category = () => {
           ›
         </button>
       </div>
+      <ModalAddCategory
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        userId={userId}
+        onSuccess={handleSuccess}
+      />
     </div>
   );
 };

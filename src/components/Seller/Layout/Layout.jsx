@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+
 import {
   TrendingUp,
   Package,
@@ -8,16 +9,22 @@ import {
   Users,
   Menu,
   X,
+  LogOut,
 } from "lucide-react";
+import { useSelector, useDispatch } from "react-redux";
 import { FaStore } from "react-icons/fa";
-
+import { logout } from "@redux/slice/authSlice";
 import styles from "./Layout.module.scss";
 
 const Layout = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
+  const handleLogout = () => {
+    dispatch(logout({ data: { token: { refreshToken: "" } } }));
+    navigate("/login");
+  };
   const currentPath =
     location.pathname === "/" ? "overview" : location.pathname.substring(1);
 
@@ -40,13 +47,33 @@ const Layout = () => {
       icon: ShoppingCart,
       path: "/seller/orders",
     },
-    { id: "revenue", label: "Doanh Thu", icon: DollarSign, path: "/revenue" },
-    { id: "complaints", label: "Khiếu Nại", icon: Users, path: "/complaints" },
+    {
+      id: "revenue",
+      label: "Doanh Thu",
+      icon: DollarSign,
+      path: "/seller/revenue",
+    },
+    {
+      id: "complaints",
+      label: "Khiếu Nại",
+      icon: Users,
+      path: "/seller/complaints",
+    },
+    {
+      id: "logout",
+      label: "Đăng xuất",
+      icon: LogOut,
+      path: "/login",
+    },
   ];
 
-  const handleNavigation = (path) => {
-    navigate(path);
-    setSidebarOpen(false);
+  const handleNavigation = (path, id) => {
+    if (id === "logout") {
+      handleLogout();
+    } else {
+      navigate(path);
+      setSidebarOpen(false);
+    }
   };
 
   const currentItem =
@@ -92,7 +119,7 @@ const Layout = () => {
                 className={`${styles.sidebarItem} ${
                   currentPath === item.id ? styles.active : ""
                 }`}
-                onClick={() => handleNavigation(item.path)}
+                onClick={() => handleNavigation(item.path, item.id)}
               >
                 <item.icon className={styles.sidebarIcon} size={20} />
                 <span className={styles.sidebarLabel}>{item.label}</span>

@@ -1,9 +1,65 @@
-// OverviewContent.scss
-.overview-content {
+.overviewContent {
   padding: 32px;
   background-color: #f5f6fa;
   min-height: 100vh;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  margin-bottom: 10px;
+  .header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    .numberSelect {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      color: #333;
+      appearance: none;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+      &:hover {
+        border-color: #888;
+      }
+
+      &:focus {
+        border-color: #1976d2;
+        box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+      }
+
+      @media (max-width: 576px) {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem;
+      }
+    }
+  }
+  .storeInfo {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    .editStoreBtn {
+      padding: 8px 16px;
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: #2563eb;
+      }
+
+      @media (max-width: 576px) {
+        font-size: 12px;
+        padding: 6px 12px;
+      }
+    }
+  }
   .headerTitle {
     font-size: 32px;
     font-weight: 700;
@@ -14,17 +70,19 @@
       font-size: 24px;
     }
   }
+
   .headerSubtitle {
     font-size: 16px;
     color: #7f8c8d;
     margin: 0;
   }
-  .stats-grid {
+
+  .statsGrid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
-
-    .stat-card {
+    margin-bottom: 24px;
+    .statCard {
       background: white;
       padding: 20px;
       border-radius: 8px;
@@ -36,36 +94,36 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       }
 
-      .stat-header {
+      .statHeader {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 12px;
 
-        .stat-title {
+        .statTitle {
           font-size: 14px;
           color: #64748b;
           font-weight: 500;
         }
 
-        .stat-icon {
+        .statIcon {
           color: #94a3b8;
         }
       }
 
-      .stat-value {
+      .statValue {
         font-size: 24px;
         font-weight: 600;
         color: #1e293b;
         margin-bottom: 8px;
 
-        .stat-suffix {
+        .statSuffix {
           font-size: 16px;
           color: #64748b;
         }
       }
 
-      .stat-change {
+      .statChange {
         font-size: 12px;
 
         &.up {
@@ -86,10 +144,10 @@
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 15px;
 
-      .stat-card {
+      .statCard {
         padding: 15px;
 
-        .stat-value {
+        .statValue {
           font-size: 20px;
         }
       }
@@ -99,32 +157,32 @@
       grid-template-columns: 1fr 1fr;
       gap: 12px;
 
-      .stat-card {
+      .statCard {
         padding: 12px;
 
-        .stat-value {
+        .statValue {
           font-size: 18px;
         }
 
-        .stat-change {
+        .statChange {
           font-size: 11px;
         }
       }
     }
   }
 
-  .content-row {
+  .contentRow {
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 20px;
-
+    margin-bottom: 24px;
     @media (max-width: 1024px) {
       grid-template-columns: 1fr;
       gap: 15px;
     }
   }
 
-  .section-header {
+  .sectionHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -136,7 +194,7 @@
       color: #1e293b;
     }
 
-    .view-all-btn {
+    .viewAllBtn {
       background: none;
       border: none;
       color: #3b82f6;
@@ -158,19 +216,19 @@
         font-size: 15px;
       }
 
-      .view-all-btn {
+      .viewAllBtn {
         font-size: 13px;
       }
     }
   }
 
-  .chart-section {
+  .chartSection {
     background: white;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
-    .chart-filters {
+    .chartFilters {
       display: flex;
       gap: 8px;
 
@@ -195,17 +253,17 @@
       }
     }
 
-    .chart-container {
+    .chartContainer {
       margin-top: 20px;
 
-      .chart-bars {
+      .chartBars {
         display: flex;
         align-items: end;
         gap: 20px;
         height: 200px;
         margin-bottom: 20px;
 
-        .bar-container {
+        .barContainer {
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -223,7 +281,7 @@
             }
           }
 
-          .bar-label {
+          .barLabel {
             margin-top: 8px;
             font-size: 12px;
             color: #64748b;
@@ -231,16 +289,16 @@
         }
       }
 
-      .chart-legend {
+      .chartLegend {
         display: flex;
         gap: 16px;
 
-        .legend-item {
+        .legendItem {
           display: flex;
           align-items: center;
           gap: 8px;
 
-          .legend-color {
+          .legendColor {
             width: 12px;
             height: 12px;
             background: #3b82f6;
@@ -258,12 +316,12 @@
     @media (max-width: 768px) {
       padding: 15px;
 
-      .chart-container {
-        .chart-bars {
+      .chartContainer {
+        .chartBars {
           height: 150px;
           gap: 15px;
 
-          .bar-container {
+          .barContainer {
             .bar {
               max-width: 30px;
             }
@@ -275,24 +333,24 @@
     @media (max-width: 480px) {
       padding: 12px;
 
-      .chart-filters {
+      .chartFilters {
         button {
           padding: 5px 10px;
           font-size: 11px;
         }
       }
 
-      .chart-container {
-        .chart-bars {
+      .chartContainer {
+        .chartBars {
           height: 120px;
           gap: 10px;
 
-          .bar-container {
+          .barContainer {
             .bar {
               max-width: 25px;
             }
 
-            .bar-label {
+            .barLabel {
               font-size: 10px;
             }
           }
@@ -301,23 +359,23 @@
     }
   }
 
-  .best-selling-section {
+  .bestSellingSection {
     background: white;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
-    .product-list {
+    .productList {
       display: flex;
       flex-direction: column;
       gap: 16px;
 
-      .product-item {
+      .productItem {
         display: flex;
         align-items: center;
         gap: 12px;
 
-        .product-avatar {
+        .productAvatar {
           width: 40px;
           height: 40px;
           border-radius: 8px;
@@ -330,23 +388,23 @@
           flex-shrink: 0;
         }
 
-        .product-info {
+        .productInfo {
           flex: 1;
 
-          .product-name {
+          .productName {
             font-size: 14px;
             font-weight: 500;
             color: #1e293b;
             margin-bottom: 4px;
           }
 
-          .product-sold {
+          .productSold {
             font-size: 12px;
             color: #64748b;
           }
         }
 
-        .product-price {
+        .productPrice {
           font-size: 14px;
           font-weight: 600;
           color: #1e293b;
@@ -357,27 +415,27 @@
     @media (max-width: 768px) {
       padding: 15px;
 
-      .product-list {
+      .productList {
         gap: 12px;
 
-        .product-item {
-          .product-avatar {
+        .productItem {
+          .productAvatar {
             width: 35px;
             height: 35px;
             font-size: 13px;
           }
 
-          .product-info {
-            .product-name {
+          .productInfo {
+            .productName {
               font-size: 13px;
             }
 
-            .product-sold {
+            .productSold {
               font-size: 11px;
             }
           }
 
-          .product-price {
+          .productPrice {
             font-size: 13px;
           }
         }
@@ -387,25 +445,25 @@
     @media (max-width: 480px) {
       padding: 12px;
 
-      .product-list {
-        .product-item {
-          .product-avatar {
+      .productList {
+        .productItem {
+          .productAvatar {
             width: 30px;
             height: 30px;
             font-size: 12px;
           }
 
-          .product-info {
-            .product-name {
+          .productInfo {
+            .productName {
               font-size: 12px;
             }
 
-            .product-sold {
+            .productSold {
               font-size: 10px;
             }
           }
 
-          .product-price {
+          .productPrice {
             font-size: 12px;
           }
         }
@@ -413,27 +471,27 @@
     }
   }
 
-  .orders-section,
-  .notifications-section {
+  .ordersSection,
+  .notificationsSection {
     background: white;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
-    .orders-list,
-    .notifications-list {
+    .ordersList,
+    .notificationsList {
       display: flex;
       flex-direction: column;
       gap: 16px;
 
-      .order-item,
-      .notification-item {
+      .orderItem,
+      .notificationItem {
         display: flex;
         align-items: center;
         gap: 12px;
 
-        .order-avatar,
-        .notification-avatar {
+        .orderAvatar,
+        .notificationAvatar {
           width: 40px;
           height: 40px;
           background: #f1f5f9;
@@ -447,32 +505,32 @@
           flex-shrink: 0;
         }
 
-        .order-info,
-        .notification-info {
+        .orderInfo,
+        .notificationInfo {
           flex: 1;
 
-          .order-customer,
-          .notification-customer {
+          .orderCustomer,
+          .notificationCustomer {
             font-size: 14px;
             font-weight: 500;
             color: #1e293b;
             margin-bottom: 4px;
           }
 
-          .order-product,
-          .notification-message {
+          .orderProduct,
+          .notificationMessage {
             font-size: 12px;
             color: #64748b;
           }
         }
 
-        .order-amount {
+        .orderAmount {
           font-size: 14px;
           font-weight: 600;
           color: #1e293b;
         }
 
-        .order-status {
+        .orderStatus {
           font-size: 12px;
           font-weight: 500;
           padding: 4px 8px;
@@ -480,7 +538,7 @@
           background: rgba(16, 185, 129, 0.1);
         }
 
-        .notification-time {
+        .notificationTime {
           font-size: 12px;
           color: #64748b;
         }
@@ -490,41 +548,41 @@
     @media (max-width: 768px) {
       padding: 15px;
 
-      .orders-list,
-      .notifications-list {
+      .ordersList,
+      .notificationsList {
         gap: 12px;
 
-        .order-item,
-        .notification-item {
-          .order-avatar,
-          .notification-avatar {
+        .orderItem,
+        .notificationItem {
+          .orderAvatar,
+          .notificationAvatar {
             width: 35px;
             height: 35px;
             font-size: 13px;
           }
 
-          .order-info,
-          .notification-info {
-            .order-customer,
-            .notification-customer {
+          .orderInfo,
+          .notificationInfo {
+            .orderCustomer,
+            .notificationCustomer {
               font-size: 13px;
             }
 
-            .order-product,
-            .notification-message {
+            .orderProduct,
+            .notificationMessage {
               font-size: 11px;
             }
           }
 
-          .order-amount {
+          .orderAmount {
             font-size: 13px;
           }
 
-          .order-status {
+          .orderStatus {
             font-size: 11px;
           }
 
-          .notification-time {
+          .notificationTime {
             font-size: 11px;
           }
         }
@@ -534,44 +592,65 @@
     @media (max-width: 480px) {
       padding: 12px;
 
-      .orders-list,
-      .notifications-list {
-        .order-item,
-        .notification-item {
-          .order-avatar,
-          .notification-avatar {
+      .ordersList,
+      .notificationsList {
+        .orderItem,
+        .notificationItem {
+          .orderAvatar,
+          .notificationAvatar {
             width: 30px;
             height: 30px;
             font-size: 12px;
           }
 
-          .order-info,
-          .notification-info {
-            .order-customer,
-            .notification-customer {
+          .orderInfo,
+          .notificationInfo {
+            .orderCustomer,
+            .notificationCustomer {
               font-size: 12px;
             }
 
-            .order-product,
-            .notification-message {
+            .orderProduct,
+            .notificationMessage {
               font-size: 10px;
             }
           }
 
-          .order-amount {
+          .orderAmount {
             font-size: 12px;
           }
 
-          .order-status {
+          .orderStatus {
             font-size: 10px;
             padding: 3px 6px;
           }
 
-          .notification-time {
+          .notificationTime {
             font-size: 10px;
           }
         }
       }
+    }
+  }
+
+  .numberSelect {
+    padding: 8px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    background: white;
+    font-size: 14px;
+    color: #1e293b;
+    cursor: pointer;
+    transition: border-color 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: #3b82f6;
+    }
+
+    @media (max-width: 480px) {
+      padding: 6px 10px;
+      font-size: 13px;
     }
   }
 }

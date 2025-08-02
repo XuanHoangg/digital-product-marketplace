@@ -36,6 +36,8 @@ import LayoutSeller from "./components/Seller/Layout/Layout.jsx";
 import Overview from "./components/Seller/Content/Overview/Overview.jsx";
 import ProductSeller from "./components/Seller/Content/Store/Store.jsx";
 import Orders from "./components/Seller/Content/Orders/Orders.jsx";
+import Revenue from "./components/Seller/Content/Revenue/Revenue.jsx";
+import Complain from "@components/Seller/Content/Complaints/Complaints.jsx";
 // admin
 import AdminLayout from "./components/Admin/Layout/Layout.jsx";
 import AdminRoute from "./routes/AdminRoute.jsx";
@@ -92,6 +94,8 @@ createRoot(document.getElementById("root")).render(
               <Route path="overview" element={<Overview />} />
               <Route path="products" element={<ProductSeller />} />
               <Route path="orders" element={<Orders />} />
+              <Route path="revenue" element={<Revenue />} />
+              <Route path="complaints" element={<Complain />} />
             </Route>
             {/* -------------------------------------------------------- */}
             <Route

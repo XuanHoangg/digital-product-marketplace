@@ -155,10 +155,13 @@
 
 .productsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 24px;
   margin-bottom: 48px;
-
+  .productDetails {
+    display: flex;
+    justify-content: space-between;
+  }
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
     gap: 16px;
@@ -247,6 +250,23 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  .editBtn {
+    width: 100%;
+    height: 30px;
+    background: transparent;
+    border: 1px solid #e1e5e9;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #2c3e50;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: #f8f9fa;
+      border-color: #4f8ef7;
+      color: #4f8ef7;
+    }
+  }
 }
 
 .productStatus {
@@ -274,23 +294,6 @@
 .actionButtons {
   display: flex;
   gap: 8px;
-}
-
-.editBtn {
-  padding: 6px 12px;
-  background: transparent;
-  border: 1px solid #e1e5e9;
-  border-radius: 4px;
-  font-size: 12px;
-  color: #2c3e50;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background-color: #f8f9fa;
-    border-color: #4f8ef7;
-    color: #4f8ef7;
-  }
 }
 
 .moreBtn {

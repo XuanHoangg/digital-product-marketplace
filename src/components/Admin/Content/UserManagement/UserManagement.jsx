@@ -118,7 +118,6 @@ const UserManagement = () => {
             Quản lý tài khoản và hoạt động của người dùng
           </p>
         </div>
-        <button className={styles.addButton}>+ Thêm người dùng</button>
       </div>
 
       <div className={styles.statsContainer}>

@@ -30,7 +30,11 @@ const getOverviewMonthlySales = async (userId) => {
     params: { userId },
   });
 };
-
+const getSellerOverview = async (userId) => {
+  return await axios.get("/api/Admin/seller/overview", {
+    params: { userId },
+  });
+};
 export {
   getOverview,
   getOverviewRecentActivity,
@@ -38,4 +42,5 @@ export {
   getOverviewUserActivity,
   getOverviewDaySales,
   getOverviewMonthlySales,
+  getSellerOverview,
 };

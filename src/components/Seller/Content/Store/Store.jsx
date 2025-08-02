@@ -1,6 +1,7 @@
 // Store.jsx
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { getStoreDetails } from "@service/seller/sellerAPI";
 
 import PopupAddProduct from "./../Popup/PopupAddProduct/PopupAddProduct.jsx";
 import styles from "./Store.module.scss";
@@ -13,22 +14,19 @@ const Store = () => {
   const [storeId, setStoreId] = useState("");
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const PAGE_SIZE = 12;
+  const [totalPages, setTotalPages] = useState(1);
+  const PAGE_SIZE = 10;
   useEffect(() => {
     getStoreID();
     fetchProducts();
   }, [storeId, currentPage]);
   const fetchProducts = async () => {
-    if (!storeId) return;
-
     try {
-      const response = await getProducts({
-        SellerId: storeId,
-        PageSize: PAGE_SIZE,
-        PageCount: currentPage,
-      });
+      const response = await getProducts(userId, PAGE_SIZE, currentPage);
 
-      const mappedProducts = response.data.data.map((item) => ({
+      console.log("Products response:", response);
+
+      const mappedProducts = response.data.map((item) => ({
         id: item.productId,
         category: item.category,
         productName: item.productName,
@@ -36,10 +34,13 @@ const Store = () => {
         quantitySelled: item.quantitySelled,
         status: item.status,
         ratingOverall: item.ratingOverall,
-        image: `data:image/png;base64,${item.image}`,
+        image: item.image,
       }));
 
       setProducts(mappedProducts);
+      console.log("Mapped products:", mappedProducts.length);
+      const pageCount = Math.ceil(mappedProducts.length / 10);
+      setTotalPages(pageCount);
     } catch (error) {
       console.error("Error fetching products:", error);
     }
@@ -145,6 +146,7 @@ const Store = () => {
   };
 
   const handlePageChange = (page) => {
+    if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
   };
 
@@ -199,9 +201,14 @@ const Store = () => {
             </div>
             <div className={styles.productContent}>
               <h3 className={styles.productTitle}>{product.title}</h3>
-              <div className={styles.productPrice}>{product.price}</div>
-              <div className={styles.productSold}>{product.sold}</div>
-              <div className={styles.productActions}>
+              <div className={styles.productDetails}>
+                <div>
+                  <div className={styles.productPrice}>{product.price}</div>
+                  <div className={styles.productSold}>
+                    Đã bán {product.quantitySelled} sản phẩm
+                  </div>
+                </div>
+
                 <span
                   className={`${styles.productStatus} ${
                     styles[product.statusType]
@@ -209,10 +216,10 @@ const Store = () => {
                 >
                   {product.status}
                 </span>
-                <div className={styles.actionButtons}>
-                  <button className={styles.editBtn}>Sửa</button>
-                  <button className={styles.moreBtn}>⋯</button>
-                </div>
+              </div>
+
+              <div className={styles.productActions}>
+                <button className={styles.editBtn}>✏️Sửa</button>
               </div>
             </div>
           </div>
@@ -227,34 +234,26 @@ const Store = () => {
         >
           ‹
         </button>
-        <button
-          className={`${styles.paginationBtn} ${
-            currentPage === 1 ? styles.active : ""
-          }`}
-          onClick={() => handlePageChange(1)}
-        >
-          1
-        </button>
-        <button
-          className={`${styles.paginationBtn} ${
-            currentPage === 2 ? styles.active : ""
-          }`}
-          onClick={() => handlePageChange(2)}
-        >
-          2
-        </button>
-        <button
-          className={`${styles.paginationBtn} ${
-            currentPage === 3 ? styles.active : ""
-          }`}
-          onClick={() => handlePageChange(3)}
-        >
-          3
-        </button>
+
+        {[...Array(totalPages)].map((_, index) => {
+          const pageNum = index + 1;
+          return (
+            <button
+              key={pageNum}
+              className={`${styles.paginationBtn} ${
+                currentPage === pageNum ? styles.active : ""
+              }`}
+              onClick={() => handlePageChange(pageNum)}
+            >
+              {pageNum}
+            </button>
+          );
+        })}
+
         <button
           className={styles.paginationBtn}
           onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === 3}
+          disabled={currentPage === totalPages}
         >
           ›
         </button>

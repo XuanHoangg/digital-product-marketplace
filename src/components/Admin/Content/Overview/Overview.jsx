@@ -132,7 +132,7 @@ const Overview = () => {
     try {
       const res = await getOverviewDaySales(userId);
       const nodes = res?.data?.nodes || [];
-      console.log("Doanh thu theo ngày:", nodes);
+      // console.log("Doanh thu theo ngày:", nodes);
       setChartData(nodes);
     } catch (err) {
       console.error("Lỗi fetch doanh thu theo ngày", err);
@@ -256,12 +256,19 @@ const Overview = () => {
   return (
     <div className={styles.overview}>
       <div className={styles.overview__header}>
-        <h1 className={styles.overview__title}>Dashboard Quản Trị</h1>
+        <h1 className={styles.overview__title}>Dashboard tổng quan</h1>
         <p className={styles.overview__subtitle}>
           Tổng quan về nền tảng thương mại điện tử
         </p>
       </div>
-
+      <div>
+        <button
+          className={styles.chart__button}
+          style={{ marginBottom: "16px" }}
+        >
+          Thêm người quản trị
+        </button>
+      </div>
       {/* Stats Cards */}
       <div className={styles.stats}>
         <div
