@@ -12,10 +12,7 @@ const ProductChild = ({
   onPageChange,
 }) => {
   const navigate = useNavigate();
-  useEffect(() => {
-    // console.log("ProductChild updated products:", products);
-  }, [products]);
-  // console.log("ProductChild products:", products);
+  useEffect(() => {}, [products]);
 
   const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
 

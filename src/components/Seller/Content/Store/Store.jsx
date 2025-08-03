@@ -2,31 +2,48 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getStoreDetails } from "@service/seller/sellerAPI";
-
+import ModalProductDetail from "./ModalProductDetail/ModalProductDetail.jsx";
 import PopupAddProduct from "./../Popup/PopupAddProduct/PopupAddProduct.jsx";
 import styles from "./Store.module.scss";
 import { getStoreId } from "@service/seller/sellerAPI";
-import { getProducts } from "@service/seller/product/productAPI";
+import {
+  getProducts,
+  getProductDetail,
+} from "@service/seller/product/productAPI";
+import { getCategories } from "@service/seller/sellerCategories.js";
 const Store = () => {
   const userId = useSelector((state) => state?.auth?.account?.userId);
-
+  const [categories, setCategories] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [storeId, setStoreId] = useState("");
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const PAGE_SIZE = 10;
+
+  const [searchText, setSearchText] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("");
+  const [selectedProduct, setSelectedProduct] = useState(null);
   useEffect(() => {
-    getStoreID();
+    fetchStoreId();
     fetchProducts();
-  }, [storeId, currentPage]);
+    fetchCategories();
+    // fetchProductDetail();
+  }, [storeId, currentPage, searchText, selectedCategory, selectedStatus]);
   const fetchProducts = async () => {
     try {
-      const response = await getProducts(userId, PAGE_SIZE, currentPage);
+      const response = await getProducts(
+        userId,
+        searchText || "",
+        selectedCategory || "",
+        selectedStatus || 0,
+        PAGE_SIZE,
+        currentPage
+      );
+      // console.log("Products response:", response);
 
-      console.log("Products response:", response);
-
-      const mappedProducts = response.data.map((item) => ({
+      const mappedProducts = response.data.items.map((item) => ({
         id: item.productId,
         category: item.category,
         productName: item.productName,
@@ -38,14 +55,12 @@ const Store = () => {
       }));
 
       setProducts(mappedProducts);
-      console.log("Mapped products:", mappedProducts.length);
-      const pageCount = Math.ceil(mappedProducts.length / 10);
-      setTotalPages(pageCount);
+      setTotalPages(Math.ceil(response.data.total / PAGE_SIZE));
     } catch (error) {
       console.error("Error fetching products:", error);
     }
   };
-  const getStoreID = async () => {
+  const fetchStoreId = async () => {
     try {
       const response = await getStoreId(userId);
       setStoreId(response.data.storeId);
@@ -53,90 +68,26 @@ const Store = () => {
       console.error("Error fetching store ID:", error);
     }
   };
-
-  // const products = [
-  //   {
-  //     id: 1,
-  //     category: "UI KIT",
-  //     title: "Premium UI Kit Bundle",
-  //     price: "1.250.000đ",
-  //     sold: "42 bản đã bán",
-  //     status: "Hoạt động",
-  //     statusType: "active",
-  //     image: "/api/placeholder/280/160",
-  //   },
-  //   {
-  //     id: 2,
-  //     category: "Khóa học",
-  //     title: "Photography Masterclass",
-  //     price: "2.900.000đ",
-  //     sold: "36 bản đã bán",
-  //     status: "Hoạt động",
-  //     statusType: "active",
-  //     image: "/api/placeholder/280/160",
-  //   },
-  //   {
-  //     id: 3,
-  //     category: "Khóa học",
-  //     title: "Business Strategy Course",
-  //     price: "1.800.000đ",
-  //     sold: "29 bản đã bán",
-  //     status: "Hoạt động",
-  //     statusType: "active",
-  //     image: "/api/placeholder/280/160",
-  //   },
-  //   {
-  //     id: 4,
-  //     category: "3D Item",
-  //     title: "Icon Library Pro",
-  //     price: "700.000đ",
-  //     sold: "22 bản đã bán",
-  //     status: "Đang chờ",
-  //     statusType: "pending",
-  //     image: "/api/placeholder/280/160",
-  //   },
-  //   {
-  //     id: 5,
-  //     category: "Ebook",
-  //     title: "Digital Marketing Guide",
-  //     price: "450.000đ",
-  //     sold: "18 bản đã bán",
-  //     status: "Hoạt động",
-  //     statusType: "active",
-  //     image: "/api/placeholder/280/160",
-  //   },
-  //   {
-  //     id: 6,
-  //     category: "Template",
-  //     title: "E-commerce Template",
-  //     price: "1.600.000đ",
-  //     sold: "15 bản đã bán",
-  //     status: "Bị chặn",
-  //     statusType: "blocked",
-  //     image: "/api/placeholder/280/160",
-  //   },
-  //   {
-  //     id: 7,
-  //     category: "3D Model",
-  //     title: "3D Character Pack",
-  //     price: "2.400.000đ",
-  //     sold: "12 bản đã bán",
-  //     status: "Hoạt động",
-  //     statusType: "active",
-  //     image: "/api/placeholder/280/160",
-  //   },
-  //   {
-  //     id: 8,
-  //     category: "Khóa học",
-  //     title: "Web Development Pro",
-  //     price: "1.800.000đ",
-  //     sold: "10 bản đã bán",
-  //     status: "Đang chờ",
-  //     statusType: "pending",
-  //     image: "/api/placeholder/280/160",
-  //   },
-  // ];
-
+  const fetchCategories = async () => {
+    try {
+      const response = await getCategories();
+      // console.log("Categories response:", response);
+      const categoryList = response?.data?.categoryIndexDtos || [];
+      setCategories(categoryList);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+  const fetchProductDetail = async (productId) => {
+    try {
+      const response = await getProductDetail(productId, userId);
+      console.log("Product detail response:", response);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching product detail:", error);
+      return null;
+    }
+  };
   const handleAddProduct = () => {
     setIsPopupOpen(true);
   };
@@ -149,7 +100,14 @@ const Store = () => {
     if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
   };
+  const handleCardClick = async (productId) => {
+    const detail = await fetchProductDetail(productId);
+    setSelectedProduct(detail);
+  };
 
+  const handleCloseModal = () => {
+    setSelectedProduct(null);
+  };
   return (
     <div className={styles.storeContainer}>
       <div className={styles.storeHeader}>
@@ -171,36 +129,51 @@ const Store = () => {
             type="text"
             className={styles.searchInput}
             placeholder="Tìm kiếm sản phẩm..."
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
           />
         </div>
         <div className={styles.filtersContainer}>
-          <select className={styles.filterSelect}>
-            <option>Tất cả danh mục</option>
-            <option>UI KIT</option>
-            <option>Khóa học</option>
-            <option>3D Item</option>
-            <option>Ebook</option>
-            <option>Template</option>
-            <option>3D Model</option>
+          <select
+            className={styles.filterSelect}
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+          >
+            <option value="">Tất cả danh mục</option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
           </select>
-          <select className={styles.filterSelect}>
-            <option>Tất cả trạng thái</option>
-            <option>Hoạt động</option>
-            <option>Đang chờ</option>
-            <option>Bị chặn</option>
+
+          <select
+            className={styles.filterSelect}
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
+          >
+            <option value="">Tất cả trạng thái</option>
+            <option value="1">Đang chờ duyệt</option>
+            <option value="2">Đang bán</option>
+            <option value="3">Đã khóa</option>
+            <option value="4">Đã xóa</option>
           </select>
         </div>
       </div>
 
       <div className={styles.productsGrid}>
         {products.map((product) => (
-          <div key={product.id} className={styles.productCard}>
+          <div
+            key={product.id}
+            className={styles.productCard}
+            onClick={() => handleCardClick(product.id)}
+          >
             <div className={styles.productImage}>
               <img src={product.image} alt={product.title} />
               <div className={styles.productCategory}>{product.category}</div>
             </div>
             <div className={styles.productContent}>
-              <h3 className={styles.productTitle}>{product.title}</h3>
+              <h3 className={styles.productTitle}>{product.productName}</h3>
               <div className={styles.productDetails}>
                 <div>
                   <div className={styles.productPrice}>{product.price}</div>
@@ -260,7 +233,19 @@ const Store = () => {
       </div>
 
       {isPopupOpen && (
-        <PopupAddProduct onClose={handleClosePopup} storeId={storeId} />
+        <PopupAddProduct
+          onClose={handleClosePopup}
+          storeId={storeId}
+          categories={categories}
+        />
+      )}
+      {selectedProduct && (
+        <ModalProductDetail
+          product={selectedProduct}
+          onClose={handleCloseModal}
+          storeId={storeId}
+          sellerId={userId}
+        />
       )}
     </div>
   );

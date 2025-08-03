@@ -4,9 +4,9 @@ import { useSelector } from "react-redux";
 
 import { postAddProduct } from "@service/seller/product/productAPI";
 import { toast } from "react-toastify";
-// import { useDispatch } from "react-redux";
+
 import { convertFileToBase64 } from "@utils/helper.js";
-const PopupAddProduct = ({ onClose, storeId }) => {
+const PopupAddProduct = ({ onClose, storeId, categories }) => {
   const userId = useSelector((state) => state?.auth?.account?.userId);
 
   const [formData, setFormData] = useState({
@@ -46,7 +46,7 @@ const PopupAddProduct = ({ onClose, storeId }) => {
         storeId: storeId,
         productName: formData.productName,
         description: formData.description,
-        categoryId: "course",
+        categoryId: formData.category,
         originalPrice: parseFloat(formData.price),
         sumaryFeature: formData.sumaryFeature,
         images: formData.images,
@@ -112,12 +112,12 @@ const PopupAddProduct = ({ onClose, storeId }) => {
                 required
               >
                 <option value="">Chọn danh mục</option>
-                <option value="ui-kit">UI Kit</option>
-                <option value="course">Khóa học</option>
-                <option value="3d-item">3D Item</option>
-                <option value="ebook">Ebook</option>
-                <option value="template">Template</option>
-                <option value="3d-model">3D Model</option>
+
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
               </select>
             </div>
             <div className={`${styles.formGroup} ${styles.halfWidth}`}>

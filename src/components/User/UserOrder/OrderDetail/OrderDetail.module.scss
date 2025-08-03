@@ -1,0 +1,410 @@
+// Variables
+$primary: #3b82f6;
+$success: #10b981;
+$warning: #f59e0b;
+$gray-50: #f9fafb;
+$gray-100: #f3f4f6;
+$gray-200: #e5e7eb;
+$gray-400: #9ca3af;
+$gray-500: #6b7280;
+$gray-600: #4b5563;
+$gray-900: #1a1a1a;
+$white: #ffffff;
+
+// Mixins
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin card-shadow {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+// Base styles
+.container {
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: #f8f9fa;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.card {
+  background: $white;
+  border-radius: 12px;
+  @include card-shadow;
+  width: 100%;
+  max-width: 600px;
+  padding: 24px;
+}
+
+// Header
+.header {
+  margin-bottom: 24px;
+}
+
+.headerContent {
+  @include flex-between;
+  margin-bottom: 8px;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+  color: $gray-900;
+  margin: 0;
+}
+
+.statusTag {
+  background-color: $warning;
+  color: $white;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.purchaseDate {
+  font-size: 14px;
+  color: $gray-500;
+  margin: 0;
+}
+
+// Product section
+.productSection {
+  margin-bottom: 32px;
+}
+
+.productLabel {
+  font-size: 14px;
+  color: $gray-500;
+  margin-bottom: 12px;
+}
+
+.productInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.productImage {
+  flex-shrink: 0;
+}
+
+.imagePlaceholder {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $white;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.productDetails {
+  flex: 1;
+}
+
+.productName {
+  font-size: 16px;
+  font-weight: 600;
+  color: $gray-900;
+  margin: 0 0 4px 0;
+}
+
+.productSeller {
+  font-size: 14px;
+  color: $gray-500;
+  margin: 0;
+}
+
+// Timeline section
+.timelineSection {
+  margin-bottom: 32px;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: $gray-900;
+  margin: 0 0 20px 0;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 32px;
+}
+
+.timelineItem {
+  position: relative;
+  padding-bottom: 24px;
+
+  &:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    left: -20px;
+    top: 32px;
+    width: 2px;
+    height: calc(100% - 8px);
+    background-color: $gray-200;
+  }
+
+  &:last-child {
+    padding-bottom: 0;
+  }
+}
+
+.timelineIcon {
+  position: absolute;
+  left: -32px;
+  top: 0;
+}
+
+.stepIconCompleted {
+  width: 24px;
+  height: 24px;
+  background-color: $success;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $white;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.stepIconCurrent {
+  width: 24px;
+  height: 24px;
+  background-color: $primary;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $white;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.stepIconPending {
+  width: 24px;
+  height: 24px;
+  background-color: $gray-400;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $white;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.timelineContent {
+  padding-left: 8px;
+}
+
+.stepTitle {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+
+  &.completed {
+    color: $success;
+  }
+
+  &.current {
+    color: $primary;
+  }
+
+  &.pending {
+    color: $gray-600;
+  }
+}
+
+.stepDate {
+  font-size: 13px;
+  color: $gray-500;
+  margin: 0 0 4px 0;
+}
+
+.stepDescription {
+  font-size: 13px;
+  color: $gray-500;
+  margin: 0;
+}
+
+// Summary section
+.summarySection {
+  margin-bottom: 24px;
+}
+
+.summaryItem {
+  @include flex-between;
+  margin-bottom: 20px;
+}
+
+.summaryLabel {
+  font-size: 14px;
+  color: $gray-500;
+}
+
+.paymentMethod {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: $gray-900;
+  font-weight: 500;
+}
+
+.pricingBreakdown {
+  border-top: 1px solid $gray-200;
+  padding-top: 16px;
+}
+
+.pricingRow {
+  @include flex-between;
+  margin-bottom: 12px;
+}
+
+.pricingLabel {
+  font-size: 14px;
+  color: $gray-500;
+}
+
+.pricingValue {
+  font-size: 14px;
+  color: $gray-900;
+  font-weight: 500;
+}
+
+.totalRow {
+  @include flex-between;
+  padding-top: 12px;
+  border-top: 1px solid $gray-200;
+}
+
+.totalLabel {
+  font-size: 16px;
+  font-weight: 600;
+  color: $gray-900;
+}
+
+.totalValue {
+  font-size: 18px;
+  font-weight: 700;
+  color: $gray-900;
+}
+
+// Contact button
+.contactButton {
+  width: 100%;
+  background-color: $white;
+  color: $primary;
+  border: 2px solid $primary;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  &:hover {
+    background-color: $primary;
+    color: $white;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+
+  .headerContent {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .productInfo {
+    gap: 10px;
+  }
+
+  .imagePlaceholder {
+    width: 50px;
+    height: 50px;
+    font-size: 16px;
+  }
+
+  .timeline {
+    padding-left: 28px;
+  }
+
+  .timelineIcon {
+    left: -28px;
+  }
+
+  .stepIconCompleted,
+  .stepIconCurrent,
+  .stepIconPending {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 12px;
+  }
+
+  .card {
+    padding: 16px;
+    border-radius: 8px;
+  }
+
+  .title {
+    font-size: 16px;
+  }
+
+  .productName {
+    font-size: 14px;
+  }
+
+  .productSeller {
+    font-size: 13px;
+  }
+
+  .sectionTitle {
+    font-size: 14px;
+  }
+
+  .summaryItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .paymentMethod {
+    align-self: flex-end;
+  }
+}

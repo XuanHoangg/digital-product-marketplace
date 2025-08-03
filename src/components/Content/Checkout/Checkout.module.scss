@@ -1,0 +1,436 @@
+$primary: #3b82f6;
+$primary-dark: #1d4ed8;
+$success: #10b981;
+$gray-50: #f9fafb;
+$gray-100: #f3f4f6;
+$gray-200: #e5e7eb;
+$gray-400: #9ca3af;
+$gray-500: #6b7280;
+$gray-900: #1a1a1a;
+$white: #ffffff;
+
+// Mixins
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin card-shadow {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+@mixin gradient-button {
+  background: #3b82f6;
+  &:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+  }
+}
+
+// Base styles
+.checkoutContainer {
+  @include flex-center;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: #f8f9fa;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.checkoutCard {
+  background: $white;
+  border-radius: 12px;
+  @include card-shadow;
+  width: 100%;
+  max-width: 800px;
+  overflow: hidden;
+}
+
+// Layout sections
+.header {
+  padding: 24px 24px 0;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  color: $gray-900;
+  margin: 0;
+}
+
+.orderSection {
+  padding: 24px;
+  border-bottom: 1px solid $gray-200;
+}
+
+.orderItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.imagePlaceholder {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 8px;
+  @include flex-center;
+  color: $white;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.itemDetails {
+  flex: 1;
+  min-width: 0;
+}
+
+.itemName {
+  font-size: 16px;
+  font-weight: 600;
+  color: $gray-900;
+  margin: 0 0 4px 0;
+  line-height: 1.4;
+}
+
+.itemAuthor {
+  font-size: 14px;
+  color: $gray-500;
+  margin: 0;
+}
+
+.itemPrice {
+  font-size: 16px;
+  font-weight: 600;
+  color: $gray-900;
+}
+
+// Summary section
+.summarySection {
+  padding: 0 24px 24px;
+  border-bottom: 1px solid $gray-200;
+}
+
+.summaryRow {
+  @include flex-between;
+  margin-bottom: 12px;
+
+  &:last-of-type {
+    margin-bottom: 16px;
+  }
+}
+
+.summaryLabel {
+  font-size: 14px;
+  color: $gray-500;
+}
+
+.summaryValue {
+  font-size: 14px;
+  color: $gray-900;
+  font-weight: 500;
+}
+
+.totalRow {
+  @include flex-between;
+  padding-top: 16px;
+  border-top: 1px solid $gray-200;
+}
+
+.totalLabel {
+  font-size: 16px;
+  font-weight: 600;
+  color: $gray-900;
+}
+
+.totalValue {
+  font-size: 18px;
+  font-weight: 700;
+  color: $gray-900;
+}
+
+// Payment section
+.paymentSection {
+  padding: 24px;
+  border-bottom: 1px solid $gray-200;
+}
+
+.paymentTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: $gray-900;
+  margin: 0 0 20px 0;
+}
+
+.paymentMethods {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.paymentMethod {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border: 2px solid $gray-200;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover:not(.disabled) {
+    border-color: #d1d5db;
+    background-color: $gray-50;
+  }
+
+  &.selected {
+    border-color: $primary;
+    background-color: #eff6ff;
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: $gray-50;
+  }
+}
+
+.radioButton input[type="radio"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.methodIcon {
+  width: 40px;
+  height: 40px;
+  @include flex-center;
+  background-color: $gray-100;
+  border-radius: 8px;
+  color: $gray-500;
+}
+
+.methodInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.methodName {
+  font-size: 16px;
+  font-weight: 600;
+  color: $gray-900;
+  margin-bottom: 2px;
+}
+
+.methodDescription {
+  font-size: 14px;
+  color: $gray-500;
+}
+
+.availableTag {
+  background-color: $success;
+  color: $white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+// Security section
+.securitySection {
+  padding: 24px;
+}
+
+.securityIcon {
+  width: 32px;
+  height: 32px;
+  background-color: $success;
+  border-radius: 50%;
+  @include flex-center;
+  margin-bottom: 16px;
+  color: $white;
+}
+
+.securityTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: $gray-900;
+  margin: 0 0 8px 0;
+}
+
+.securityDescription {
+  font-size: 14px;
+  color: $gray-500;
+  line-height: 1.5;
+  margin: 0 0 16px 0;
+}
+
+.securityFeatures {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    font-size: 14px;
+    color: $gray-500;
+    line-height: 1.5;
+    margin-bottom: 8px;
+    padding-left: 20px;
+    position: relative;
+
+    &:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: $success;
+      font-weight: 600;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// Button & footer
+.paymentButton {
+  width: 100%;
+  @include gradient-button;
+  color: $white;
+  border: none;
+  border-radius: 12px;
+  padding: 16px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  margin: auto;
+  //   margin-bottom: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  @include flex-center;
+  gap: 8px;
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.helpSection {
+  padding: 20px 24px 24px;
+  text-align: center;
+}
+
+.helpLink {
+  color: $gray-500;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: $primary;
+    text-decoration: underline;
+  }
+}
+
+// Responsive breakpoints
+@media (max-width: 768px) {
+  .checkoutContainer {
+    padding: 10px;
+  }
+
+  .header {
+    padding: 20px 20px 0;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .orderSection,
+  .summarySection,
+  .paymentSection,
+  .securitySection {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .paymentButton {
+    margin: auto;
+    padding: 14px 20px;
+  }
+
+  .helpSection {
+    padding: 16px 20px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .checkoutContainer {
+    padding: 8px;
+  }
+
+  .checkoutCard {
+    border-radius: 8px;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+
+  .imagePlaceholder {
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+  }
+
+  .itemName {
+    font-size: 14px;
+  }
+
+  .itemAuthor {
+    font-size: 12px;
+  }
+
+  .itemPrice {
+    font-size: 14px;
+  }
+
+  .methodIcon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .radioButton input[type="radio"] {
+    width: 18px;
+    height: 18px;
+  }
+
+  .methodName {
+    font-size: 14px;
+  }
+
+  .methodDescription {
+    font-size: 12px;
+  }
+
+  .paymentButton {
+    font-size: 14px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    gap: 6px;
+  }
+
+  .helpLink {
+    font-size: 13px;
+  }
+}

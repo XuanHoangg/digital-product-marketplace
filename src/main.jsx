@@ -18,6 +18,8 @@ import HomePage from "./components/Content/HomePage/HomePage.jsx";
 import UserSecurity from "./components/User/UserSecurity/UserSecurity.jsx";
 import UserWallet from "./components/User/UserWallet/UserWallet.jsx";
 // import UserOrder from "./components/User/UserOrder/UserOrder.jsx";
+import OrderDetail from "@components/User/UserOrder/OrderDetail/OrderDetail.jsx";
+// import UserOrder from "./components/User/UserOrder/UserOrder.jsx";
 // products and children
 import Product from "./components/Content/Product/Product.jsx";
 import DetailProduct from "./components/Content/Product/ProductDetail/ProductDetail.jsx";
@@ -49,6 +51,9 @@ import AdminProductManagement from "./components/Admin/Content/ProductManagement
 import AdminSellerManagement from "./components/Admin/Content/SellerManagement/SellerManagement.jsx";
 import AdminSetting from "./components/Admin/Content/Setting/Setting.jsx";
 import AdminCategory from "./components/Admin/Content/Category/Category.jsx";
+// checkout
+import Checkout from "./components/Content/Checkout/Checkout.jsx";
+import CheckoutSuccess from "@components/Content/Checkout/CheckoutSuccess/CheckoutSuccess.jsx";
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
@@ -60,7 +65,8 @@ createRoot(document.getElementById("root")).render(
 
               <Route path="/product" element={<Product />} />
               <Route path="/product/:id" element={<DetailProduct />} />
-
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/checkout-success" element={<CheckoutSuccess />} />
               <Route path="/service" element={<Service />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/question" element={<FAQPage />} />
@@ -75,6 +81,7 @@ createRoot(document.getElementById("root")).render(
                 <Route index element={<UserInfor />} />
                 <Route path="security" element={<UserSecurity />} />
                 <Route path="wallet" element={<UserWallet />} />
+                <Route path="order-detail" element={<OrderDetail />} />
                 {/* <Route path="orders" element={<UserOrder />} /> */}
                 {/* Add other user-related routes here */}
               </Route>

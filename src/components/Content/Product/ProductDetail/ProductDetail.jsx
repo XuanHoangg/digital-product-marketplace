@@ -6,9 +6,13 @@ import Loading from "@components/Loading/Loading";
 import Chat from "@components/Chat/Chat";
 import { getDetailProduct } from "@service/user/store";
 import { useParams, useLocation } from "react-router-dom";
-
+import { postAddToCart, putCheckBuyNow } from "@service/user/store";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 const DetailProduct = () => {
   const { id } = useParams();
+  const userId = useSelector((state) => state?.auth?.account?.userId);
+
   const [product, setProduct] = useState(null);
   const [mainImage, setMainImage] = useState("");
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -20,7 +24,7 @@ const DetailProduct = () => {
   const fetchProduct = async () => {
     try {
       const res = await getDetailProduct(id);
-      // console.log("Fetch product response:", res);
+      console.log("Product detail response:", res);
 
       if (res.status === 0) {
         setProduct(res.data);
@@ -30,7 +34,32 @@ const DetailProduct = () => {
       console.error("Failed to fetch product", error);
     }
   };
-
+  const handleAddToCart = async (productId) => {
+    try {
+      const res = await postAddToCart(productId, userId, 1);
+      console.log("Add to cart response:", res);
+      if (res.status === 0) {
+        toast.success(res.data);
+      } else {
+        toast.error(res.message || "Sản phẩm đang lỗi, vui lòng thử lại sau");
+      }
+    } catch (error) {
+      console.error("Failed to add product to cart", error);
+    }
+  };
+  const handleCheckBuyNow = async (productId) => {
+    try {
+      const res = await putCheckBuyNow(userId, productId, 1);
+      console.log("Check buy now response:", res);
+      if (res.status === 0) {
+        toast.success(res.data);
+      } else {
+        toast.error(res.message || "Sản phẩm đang lỗi, vui lòng thử lại sau");
+      }
+    } catch (error) {
+      console.error("Failed to check buy now", error);
+    }
+  };
   if (!product) return <Loading type="car" size="large" color="#2563eb" />;
 
   return (
@@ -66,13 +95,26 @@ const DetailProduct = () => {
             </span>
             <div className={styles.oldPriceSection}>
               {" "}
-              <p className={styles.oldPrice}>79.999₫</p>
-              <p className={styles.discount}>-38%</p>
+              <p className={styles.oldPrice}>
+                {" "}
+                {product.originalPrice.toLocaleString("vi-VN")}₫
+              </p>
+              <p className={styles.discount}>{product.discount}%</p>
             </div>
           </div>
           <div className={styles.buttonGroup}>
-            <button className={styles.buyNow}>Mua ngay</button>
-            <button className={styles.addToCart}>Thêm vào giỏ</button>
+            <button
+              className={styles.buyNow}
+              onClick={() => handleCheckBuyNow(product.productId)}
+            >
+              Mua ngay
+            </button>
+            <button
+              className={styles.addToCart}
+              onClick={() => handleAddToCart(product.productId)}
+            >
+              Thêm vào giỏ
+            </button>
           </div>
           <div className={styles.includes}>
             <p className={styles.boldTitle}>Bao gồm:</p>

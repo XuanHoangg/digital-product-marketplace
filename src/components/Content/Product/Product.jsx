@@ -5,8 +5,7 @@ import RatingFilter from "./ProductFilters/RatingFilter";
 import ProductChild from "./ProductChild/ProductChild";
 import { getProducts, getCategory } from "@service/user/store";
 
-const PAGE_SIZE = 9;
-
+const PAGE_SIZE = 10;
 const STATIC_RATINGS = [0, 1, 2, 3, 4, 5];
 
 const Product = () => {
@@ -16,60 +15,83 @@ const Product = () => {
   const [products, setProducts] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [pageNumber, setPageNumber] = useState(1);
-  // Mặc định chọn "Tất cả sản phẩm" (id = "")
-  const [selectedCategories, setSelectedCategories] = useState([""]);
-  // Mặc định rating là 5 sao
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedRating, setSelectedRating] = useState(0);
+  const [searchText, setSearchText] = useState("");
+  const [searchInput, setSearchInput] = useState("");
   const fetchDataCategory = async () => {
-    const res = await getCategory();
-    // res.data là mảng { categoryId, categoryName, categoriesCount }
-    const mapped = (res.data || []).map((item) => ({
-      id: item.categoryId,
-      name: item.categoryName,
-    }));
-    setCategories([{ id: "", name: "Tất cả sản phẩm" }, ...mapped]);
-    // console.log("Fetched categories:", mapped);
+    try {
+      const res = await getCategory();
+      const mapped = (res.data || []).map((item) => ({
+        id: String(item.categoryId),
+        name: item.categoryName,
+      }));
+      setCategories([{ id: "", name: "Tất cả sản phẩm" }, ...mapped]);
+    } catch (err) {
+      console.error("Fetch categories error:", err);
+    }
   };
 
   const fetchData = async () => {
-    let text = null;
     try {
-      console.log("Fetching products with params:", {
-        Text: text,
-        selectedCategories,
-        selectedRating,
-        PAGE_SIZE,
-        pageNumber,
-      });
+      let categoryIds = [];
+
+      if (selectedCategories.length > 0 && !selectedCategories.includes("")) {
+        categoryIds = selectedCategories.filter(
+          (id) => id !== "" && id !== null && id !== undefined
+        );
+      }
 
       const res = await getProducts(
-        null,
+        searchText || null,
         selectedRating,
-        selectedCategories,
+        categoryIds,
         PAGE_SIZE,
         pageNumber
       );
-      console.log("Fetch products response:", res);
+      console.log("Product list response:", res);
 
       if (res.status === 0) {
         setProducts(res.data.productIndexList || []);
         setTotalCount(res.data.totalCount || 0);
+      } else {
+        console.error("API returned error status:", res.status);
       }
     } catch (err) {
-      console.error("Fetch products error", err);
+      console.error("Fetch products error:", err);
     }
   };
 
   const handleSelectCategories = (updated) => {
-    // console.log("Đã chọn categories:", updated);
     setSelectedCategories(updated);
+    setPageNumber(1);
+  };
+
+  const handleSelectRating = (rating) => {
+    setSelectedRating(rating);
+    setPageNumber(1);
   };
 
   useEffect(() => {
     fetchData();
     fetchDataCategory();
-  }, [pageNumber, selectedCategories, selectedRating]);
+  }, [pageNumber, selectedCategories, selectedRating, searchText]);
 
+  const handleReset = () => {
+    setSelectedCategories([]);
+    setSelectedRating(0);
+    setPageNumber(1);
+  };
+  const handleSearchInputChange = (e) => {
+    setSearchInput(e.target.value);
+  };
+
+  const handleSearchSubmit = (e) => {
+    if (e.key === "Enter" || e.type === "click") {
+      setSearchText(searchInput.trim());
+      setPageNumber(1); // Reset to page 1 when searching
+    }
+  };
   return (
     <div className={styles.product__container}>
       <h2 className={styles.product__title}>Sản phẩm</h2>
@@ -87,18 +109,37 @@ const Product = () => {
           <RatingFilter
             ratings={STATIC_RATINGS}
             selected={selectedRating}
-            onSelect={setSelectedRating}
+            onSelect={handleSelectRating}
           />
           <div className={styles.product__actions}>
-            <button className={styles.reset}>Đặt Lại</button>
+            <button className={styles.reset} onClick={handleReset}>
+              Đặt Lại
+            </button>
             <button className={styles.apply}>Áp Dụng</button>
           </div>
         </aside>
 
         <section className={styles.product__list}>
+          <div className={styles.product__searchBox}>
+            <input
+              type="text"
+              className={styles.product__search}
+              placeholder="Tìm kiếm sản phẩm..."
+              value={searchInput}
+              onChange={handleSearchInputChange}
+              onKeyPress={handleSearchSubmit}
+            />
+            <button
+              className={styles.product__searchBtn}
+              onClick={handleSearchSubmit}
+              type="button"
+            >
+              🔍
+            </button>
+          </div>
           <div className={styles.product__resultBox}>
-            Hiển thị <strong>{PAGE_SIZE}</strong> trong{" "}
-            <strong>{totalCount.toLocaleString()}</strong> kết quả
+            Hiển thị <strong>{Math.min(PAGE_SIZE, products.length)}</strong>{" "}
+            trong <strong>{totalCount.toLocaleString()}</strong> kết quả
           </div>
           <ProductChild
             products={products}

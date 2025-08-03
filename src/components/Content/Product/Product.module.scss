@@ -18,6 +18,52 @@
     &__list {
       flex: 1;
     }
+    .product__searchBox {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      gap: 0.5rem;
+    }
+
+    .product__search {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.2s ease;
+
+      &:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+      }
+
+      &::placeholder {
+        color: #999;
+      }
+    }
+
+    .product__searchBtn {
+      padding: 0.75rem 1rem;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.2s ease;
+      min-width: 50px;
+
+      &:hover {
+        background: #0056b3;
+      }
+
+      &:active {
+        transform: translateY(1px);
+      }
+    }
+
     .product__resultBox {
       font-size: 13px;
       color: #4b5563; // xám vừa

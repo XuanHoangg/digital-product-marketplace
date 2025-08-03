@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-
+import { getStoreDetails } from "@service/seller/sellerAPI";
 import styles from "./Chat.module.scss";
 import {
   startConnection,
@@ -18,21 +18,34 @@ import {
 const Chat = ({ onClose, receiverId, storeId, isBuyer }) => {
   const [inputValue, setInputValue] = useState("");
   const [messages, setMessages] = useState([]);
+  const [storeName, setStoreName] = useState("");
   const userId = useSelector((state) => state?.auth?.account?.userId);
   const bottomRef = useRef(null);
   const didInitRef = useRef(false);
-  // Kết nối khi mở chat
+  const fetchStoreDetails = async () => {
+    try {
+      const res = await getStoreDetails(storeId);
+      console.log("Store details:", res);
+
+      // if (res.status === 0) {
+      //   setStoreName(res.data.storeName || "Design Studio");
+      // } else {
+      //   console.error("Failed to fetch store details:", res.message);
+      // }
+    } catch (err) {
+      console.error("Error fetching store details:", err);
+    }
+  };
   useEffect(() => {
     fetchHistory();
-
-    // Real-time SignalR
+    fetchStoreDetails();
     startConnection(userId, (message) => {
       setMessages((prev) => [
         ...prev,
         {
-          id: message.id, // nếu server gửi
+          id: message.id,
           content: message.content,
-          // dùng đúng trường:
+
           isOwn: message.isOwnMessage,
           time: new Date(message.receiveAt).toLocaleTimeString([], {
             hour: "2-digit",
@@ -55,7 +68,7 @@ const Chat = ({ onClose, receiverId, storeId, isBuyer }) => {
         } else {
           bottomRef.current.scrollIntoView({ behavior: "smooth" });
         }
-      }, 0); // delay cực nhỏ sau render
+      }, 0);
     }
   }, [messages]);
 
@@ -63,7 +76,6 @@ const Chat = ({ onClose, receiverId, storeId, isBuyer }) => {
     try {
       let history = [];
 
-      // Giả định là buyer đang đăng nhập
       if (isBuyer) {
         const res = await buyerChatHistory({
           StoreId: storeId,
@@ -71,11 +83,11 @@ const Chat = ({ onClose, receiverId, storeId, isBuyer }) => {
         });
         console.log("Lịch sử chat:", res);
         history = res.data.messages.map((msg) => ({
-          id: msg.id, // nếu có
+          id: msg.id,
           content: msg.content,
-          // dùng đúng tên boolean từ API:
+
           isOwn: msg.isOwnMessage,
-          // parse đúng trường receiveAt:
+
           time: new Date(msg.receiveAt).toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
@@ -121,10 +133,8 @@ const Chat = ({ onClose, receiverId, storeId, isBuyer }) => {
 
     setMessages((prev) => [...prev, message]);
 
-    // Gửi qua SignalR
     await sendMessage(receiverId, inputValue);
 
-    // Gửi lưu DB qua API
     if (isBuyer) {
       await buyerSendMessage({
         storeId,
@@ -153,7 +163,6 @@ const Chat = ({ onClose, receiverId, storeId, isBuyer }) => {
 
   return (
     <div className={styles.chatContainer}>
-      {/* Chat Header */}
       <div className={styles.chatHeader}>
         <div className={styles.headerLeft}>
           <div className={styles.avatar}>
@@ -173,7 +182,6 @@ const Chat = ({ onClose, receiverId, storeId, isBuyer }) => {
         </button>
       </div>
 
-      {/* Chat Messages */}
       <div className={styles.chatMessages}>
         {messages.map((message, index) => (
           <div
@@ -209,11 +217,10 @@ const Chat = ({ onClose, receiverId, storeId, isBuyer }) => {
             </div>
           </div>
         ))}
-        {/* Scroll target */}
+
         <div ref={bottomRef} />
       </div>
 
-      {/* Chat Input */}
       <div className={styles.chatInput}>
         <div className={styles.inputContainer}>
           <input
